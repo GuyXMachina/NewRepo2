@@ -1,0 +1,25 @@
+﻿@model FacilityListViewModel
+
+<h1 class="text-center">Available Facilities</h1>
+
+<!-- Your sorting and pagination UI here -->
+
+<div class="container">
+    <div class="row">
+        @foreach (var facility in Model.Facilities)
+        {
+            <div class="col-md-3">
+                <div class="card mb-4">
+                    <img src="@facility.Code" class="card-img-top" alt="@facility.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@facility.Name</h5>
+                        <p class="card-text">@facility.Capacity</p>
+                        <a href="@Url.Action("Details", new { id = facility.FacilityID })" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Your pagination UI here -->

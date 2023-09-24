@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "_Layout";
+    string controller =
+        ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    string action =
+        ViewContext.RouteData.Values["action"].ToString().ToLower();
+}
+<div id="AdminHeader">
+    <hr />
+    <h2>Guitar Shop Admin</h2>
+    <hr />
+    <div class="mb-3">
+        <a class="@(controller == "adminhome" ? "fw-bold" : "")"
+           asp-controller="AdminHome" asp-action="Index">Admin Home</a> |
+        <a class="@(controller == "adminproduct" ? "fw-bold" : "")"
+           asp-controller="AdminProduct" asp-action="List">Products</a> |
+        <a class="@(controller == "admincategory" ? "fw-bold" : "")"
+           asp-controller="AdminCategory" asp-action="List">Categories</a>
+    </div>
+</div>
+
+<div>
+    @RenderBody()
+</div>

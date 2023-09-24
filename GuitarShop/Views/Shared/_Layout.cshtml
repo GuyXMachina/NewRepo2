@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Facility Management</title>
+    <link rel="stylesheet" asp-href-include="/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/all.min.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+            <a class="navbar-brand" href="/">
+                <img src="https://i.pinimg.com/originals/9e/0a/91/9e0a9114c93b4ae16fe2b20f1da31316.png" alt="Facility Management" width="60" height="60">
+                Facility Management
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+
+                    @if (User.IsInRole("FacilityAdmin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="FacilityAdmin" asp-action="Facilities">Manage Facilities</a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("FacilityManager"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="FacilityManager" asp-action="Index">Manager Dashboard</a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("FacilityInCharge"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="FacilityInCharge" asp-action="Bookings">Your Bookings</a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("User"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="User" asp-action="Facilities">View Facilities</a>
+                        </li>
+                    }
+                </ul>
+
+                <ul class="navbar-nav navbar-right">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link">Hello, @User.Identity.Name</a>
+                        </li>
+                        <li class="nav-item">
+                            <form asp-controller="Account" asp-action="Logout" method="post">
+                                <button class="btn btn-link nav-link" type="submit">Log Out</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main style="padding-top: 100px;">
+        @RenderBody()
+    </main>
+
+    <footer>
+        <hr />
+        <p>&copy; @DateTime.Now.Year - Facility Management</p>
+    </footer>
+    <script asp-src-include="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

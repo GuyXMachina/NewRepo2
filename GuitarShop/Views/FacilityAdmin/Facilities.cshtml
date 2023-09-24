@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Facility>
+
+<h1 class="text-center my-4">Manage Facilities</h1>
+
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var facility in Model)
+            {
+                <tr>
+                    <td>@facility.Name</td>
+                    <td>@facility.Location</td>
+                    <td>
+                        <a asp-action="UpdateFacility" asp-route-id="@facility.CategoryID" class="btn btn-primary">Edit</a>
+                        <a asp-action="DeleteFacility" asp-route-id="@facility.CategoryID" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

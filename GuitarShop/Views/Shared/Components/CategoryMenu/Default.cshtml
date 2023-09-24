@@ -1,0 +1,25 @@
+﻿@model CategoryListViewModel
+
+<ul class="list-group">
+    <li class="list-group-item">
+        <a asp-action="List"
+           asp-route-id="All"
+           class="list-group-item
+                  @Model.CheckActiveCategory("all")
+                 @Model.CheckActiveCategory(null)
+                 ">
+            All
+        </a>
+    </li>
+    @foreach (Category c in Model.Categories)
+    {
+        <li class="list-group-item">
+            <a asp-action="List"
+           asp-route-id="@c.CategoryName"
+               class="list-group-item
+                     @Model.CheckActiveCategory(c.CategoryName.ToLower())">
+                @c.CategoryName
+            </a>
+        </li>
+    }
+</ul>

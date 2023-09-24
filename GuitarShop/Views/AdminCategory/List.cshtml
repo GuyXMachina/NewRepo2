@@ -1,0 +1,45 @@
+﻿@model List<Category>
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Category Manager";
+}
+
+<h1>@ViewBag.Title</h1>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="btn-close"
+            data-bs-dismiss="alert" aria-label="Close">
+        </button>
+        @TempData["Message"]
+    </div>
+}
+
+<div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+                <th></th>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.CategoryName</td>
+                    <td>
+                        <a asp-action="Update"
+                       asp-route-id="@category.CategoryID">Update</a>
+                    </td>
+                    <td>
+                        <a asp-action="Delete"
+                       asp-route-id="@category.CategoryID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-action="Add" class="btn btn-primary">Add New Category</a>
+</div>

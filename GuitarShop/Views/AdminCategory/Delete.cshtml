@@ -1,0 +1,18 @@
+﻿@model Category
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Delete Product";
+}
+
+<h1>Confirm Deletion</h1>
+<h3>@Model.CategoryName</h3>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="CategoryID" />
+    <input type="hidden" asp-for="CategoryName" />
+
+    <button type="submit" class="btn btn-primary">Delete</button>
+    <a asp-action="List" class="btn btn-primary">Cancel</a>
+</form>
+
+

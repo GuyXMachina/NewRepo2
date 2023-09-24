@@ -1,0 +1,12 @@
+﻿@model Facility
+
+<h1 class="text-center my-4">Delete Facility</h1>
+
+<div class="container">
+    <p>Are you sure you want to delete @Model.Name?</p>
+    <form asp-action="DeleteFacilityConfirmed" method="post">
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a asp-action="Facilities" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
