@@ -11,7 +11,7 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
             <a class="navbar-brand" href="/">
-                <img src="https://i.pinimg.com/originals/9e/0a/91/9e0a9114c93b4ae16fe2b20f1da31316.png" alt="Facility Management" width="60" height="60">
+                <img src="https://www.ufs.ac.za/images/librariesprovider5/ufs_redesign_2021/ufsheaderlogo.svg?sfvrsn=15b37820_2" alt="Facility Management" width="180" height="60">
                 Facility Management
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -49,7 +49,7 @@
                     @if (User.IsInRole("User"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="User" asp-action="Facilities">View Facilities</a>
+                            <a class="nav-link" asp-controller="Facility" asp-action="List">View Facilities</a>
                         </li>
                     }
                 </ul>

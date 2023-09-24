@@ -9,10 +9,10 @@ using System.Linq.Expressions;
 
 namespace GuitarShop.Controllers
 {
-    public class ProductController : Controller
+    public class FacilityController : Controller
     {
         private readonly IRepositoryWrapper _repo;
-        public ProductController(IRepositoryWrapper repo)
+        public FacilityController(IRepositoryWrapper repo)
         {
             _repo = repo;
         }
@@ -34,14 +34,10 @@ namespace GuitarShop.Controllers
             }
             else
             {
-
                 orderByDirection = "asc";
             }
 
-            //Route values are set to lower case and does not match actual property name
-            //Do the following to convert the first letter to uppercase (name -> Name)
             string sPropertyName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(sortBy);
-
             orderBy = p => EF.Property<object>(p, sPropertyName);  //e.g. p => p.Name
 
             if (id == "all")
@@ -57,10 +53,19 @@ namespace GuitarShop.Controllers
             }
             else
             {
-                int iCatId = _repo.Category.FindByCondition(c => c.CategoryName.ToLower() == id)
-                               .FirstOrDefault().CategoryID;
-                iTotalProducts = _repo.Facility.FindByCondition(p => p.CategoryID == iCatId)
-                                .Count();
+                var category = _repo.Category.FindByCondition(c => c.CategoryName.ToLower() == id).FirstOrDefault();
+
+                if (category == null)
+                {
+                    // Handle the case where no category was found. 
+                    // You could log an error, throw an exception, or redirect the user.
+                    // For now, let's redirect to the list of all facilities.
+                    return RedirectToAction("List", new { id = "all" });
+                }
+
+                int iCatId = category.CategoryID;
+
+                iTotalProducts = _repo.Facility.FindByCondition(p => p.CategoryID == iCatId).Count();
                 products = _repo.Facility.GetWithOptions(new QueryOptions<Facility>
                 {
                     OrderBy = orderBy,
@@ -68,7 +73,7 @@ namespace GuitarShop.Controllers
                     Where = p => p.CategoryID == iCatId,
                     PageNumber = Page,
                     PageSize = iPageSize
-                }); ;
+                });
             }
 
             var model = new FacilityListViewModel
@@ -83,9 +88,9 @@ namespace GuitarShop.Controllers
                 }
             };
 
-            // bind products to view
             return View(model);
         }
+
         public IActionResult Details(int id)
         {
             Facility product = _repo.Facility.GetById(id);
