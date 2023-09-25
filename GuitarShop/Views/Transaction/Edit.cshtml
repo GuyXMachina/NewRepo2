@@ -1,0 +1,31 @@
+﻿@model Transaction
+
+<h2>Edit Transaction</h2>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="TransactionID" />
+
+    <div class="form-group">
+        <label asp-for="BookingID"></label>
+        <input asp-for="BookingID" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Amount"></label>
+        <input asp-for="Amount" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TransactionDate"></label>
+        <input asp-for="TransactionDate" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PaymentMethod"></label>
+        <input asp-for="PaymentMethod" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="ManageTransactions" class="btn btn-secondary">Cancel</a>
+</form>
+

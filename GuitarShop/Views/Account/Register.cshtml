@@ -4,6 +4,15 @@
 <div class="text-danger" asp-validation-summary="All"></div>
 <form asp-action="Register" asp-controller="Account" method="post">
     <div class="form-group">
+        <label asp-for="UserType"></label>
+        <select asp-for="UserType" class="form-control" id="userTypeSelect">
+            <option value="">Select User Type</option>
+            <option value="Student">Student</option>
+            <option value="Visitor">Visitor</option>
+            <option value="Staff">Staff</option>
+        </select>
+    </div>
+    <div class="form-group">
         <label asp-for="UserName"></label>
         <input asp-for="UserName" class="form-control" />
     </div>
@@ -19,5 +28,42 @@
         <label asp-for="ConfirmPassword"></label>
         <input asp-for="ConfirmPassword" class="form-control" />
     </div>
+
+    <div class="form-group" id="studentNumberDiv" style="display:none;">
+        <label asp-for="StudentNumber"></label>
+        <input asp-for="StudentNumber" class="form-control" />
+    </div>
+    <div class="form-group" id="employeeNumberDiv" style="display:none;">
+        <label asp-for="EmployeeNumber"></label>
+        <input asp-for="EmployeeNumber" class="form-control" />
+    </div>
+    <div class="form-group" id="passportNumberDiv" style="display:none;">
+        <label asp-for="PassportNumber"></label>
+        <input asp-for="PassportNumber" class="form-control" />
+    </div>
     <button class="btn btn-primary" type="submit">Register</button>
 </form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#userTypeSelect').change(function () {
+                let selectedType = $(this).val();
+                // Hide all first
+                $('#studentNumberDiv').hide();
+                $('#employeeNumberDiv').hide();
+                $('#passportNumberDiv').hide();
+                // Show the selected
+                if (selectedType === 'Student') {
+                    $('#studentNumberDiv').show();
+                } else if (selectedType === 'Visitor') {
+                    $('#passportNumberDiv').show();
+                } else if (selectedType === 'Staff') {
+                    $('#employeeNumberDiv').show();
+                }
+            });
+        });
+    </script>
+}
+
+

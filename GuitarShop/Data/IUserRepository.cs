@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using GuitarShop.Models;
 
 namespace GuitarShop.Data
 {
-    public interface IUserRepository : IRepositoryBase<IdentityUser>
+    public interface IUserRepository : IRepositoryBase<User>
     {
-        IEnumerable<IdentityUser> GetAllUsers();
-        IdentityUser GetUserByUsername(string username);
-        IdentityUser GetUserByEmail(string email);
+      
+        IEnumerable<User> GetAllUsers();
+        User GetUserByUsername(string username);
+        User GetUserByEmail(string email);
         // Add more methods as needed
     }
 }

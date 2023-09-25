@@ -1,27 +1,30 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using GuitarShop.Models;
 
 namespace GuitarShop.Data
 {
-    public class UserRepository : RepositoryBase<IdentityUser>, IUserRepository
+    public class UserRepository : RepositoryBase<User>, IUserRepository
     {
         public UserRepository(AppDbContext appDbContext) : base(appDbContext)
         {
         }
 
+
         // Fetch all users
-        public IEnumerable<IdentityUser> GetAllUsers()
+        public IEnumerable<User> GetAllUsers()
         {
             return _appDbContext.Users.ToList();
         }
 
         // Fetch a user by username
-        public IdentityUser GetUserByUsername(string username)
+        public User GetUserByUsername(string username)
         {
             return _appDbContext.Users.FirstOrDefault(u => u.UserName == username);
         }
 
         // Fetch a user by email
-        public IdentityUser GetUserByEmail(string email)
+        public User GetUserByEmail(string email)
         {
             return _appDbContext.Users.FirstOrDefault(u => u.Email == email);
         }

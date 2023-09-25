@@ -68,33 +68,37 @@ namespace GuitarShop.Data
         }
 
 
-            public static async void CreateRolesAndUsers(IApplicationBuilder app)
+        public static async void CreateRolesAndUsers(IApplicationBuilder app)
+        {
+            string[] roles = new string[] { "FacilityAdmin", "FacilityManager", "FacilityInCharge", "User" };
+            UserManager<User> userManager = app.ApplicationServices
+                .CreateScope().ServiceProvider
+                .GetRequiredService<UserManager<User>>();
+
+            RoleManager<IdentityRole> roleManager = app.ApplicationServices
+                .CreateScope().ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            foreach (var role in roles)
             {
-
-                string[] roles = new string[] { "FacilityAdmin", "FacilityManager", "FacilityInCharge", "User" };
-                UserManager<IdentityUser> userManager = app.ApplicationServices
-                    .CreateScope().ServiceProvider
-                    .GetRequiredService<UserManager<IdentityUser>>();
-
-                RoleManager<IdentityRole> roleManager = app.ApplicationServices
-                    .CreateScope().ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-                foreach (var role in roles)
+                if (await roleManager.FindByNameAsync(role) == null)
                 {
-                    if (await roleManager.FindByNameAsync(role) == null)
-                    {
-                        await roleManager.CreateAsync(new IdentityRole(role));
-                    }
+                    await roleManager.CreateAsync(new IdentityRole(role));
                 }
-
-                var user = new IdentityUser { UserName = "FacilityAdmin", Email = "Admin@example.com" };
-                var result = await userManager.CreateAsync(user, "Password123!");
-
-                    if (result.Succeeded)
-                    {
-                        await userManager.AddToRoleAsync(user, "FacilityAdmin");
-                    }
             }
+
+            var user = new User
+            {
+                UserName = "FacilityAdmin",
+                Email = "Admin@example.com",
+                UserType = "Admin" 
+            };
+            var result = await userManager.CreateAsync(user, "Password123!");
+
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(user, "FacilityAdmin");
+            }
+        }
 
 
     }

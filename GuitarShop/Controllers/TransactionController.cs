@@ -1,6 +1,7 @@
 ﻿using GuitarShop.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using GuitarShop.Models;
 using System.Data;
 
 namespace GuitarShop.Controllers
@@ -28,6 +29,60 @@ namespace GuitarShop.Controllers
         {
             var transactions = _repo.Transaction.FindAll();
             return View(transactions);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "FacilityAdmin")]
+        public IActionResult Edit(int id)
+        {
+            var transaction = _repo.Transaction.GetById(id);
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+            return View(transaction);
+        }
+
+        // For Facility Admin: Update transaction details
+        [HttpPost]
+        [Authorize(Roles = "FacilityAdmin")]
+        public IActionResult Edit(int id, Transaction updatedTransaction)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(updatedTransaction);
+            }
+
+            var transaction = _repo.Transaction.GetById(id);
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
+            // Update fields here, e.g.,
+            transaction.Amount = updatedTransaction.Amount;
+            transaction.PaymentMethod = updatedTransaction.PaymentMethod;
+
+            _repo.Transaction.Update(transaction);
+            _repo.Save();
+
+            return RedirectToAction("ManageTransactions");
+        }
+
+        // For Facility Admin: Delete transaction
+        [Authorize(Roles = "FacilityAdmin")]
+        public IActionResult Delete(int id)
+        {
+            var transaction = _repo.Transaction.GetById(id);
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
+            _repo.Transaction.Delete(transaction);
+            _repo.Save();
+
+            return RedirectToAction("ManageTransactions");
         }
 
         // View Transaction Details

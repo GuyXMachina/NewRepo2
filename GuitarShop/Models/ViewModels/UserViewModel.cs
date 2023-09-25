@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace GuitarShop.Models.ViewModels
 {
@@ -17,6 +18,9 @@ namespace GuitarShop.Models.ViewModels
 
     public class RegisterModel
     {
+        [Required]
+        [Display(Name = "User Type")]
+        public string UserType { get; set; }
         [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
@@ -56,6 +60,16 @@ namespace GuitarShop.Models.ViewModels
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class UserProfileViewModel
+    {
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string StudentNumber { get; set; }
+        public string IDNumberOrPassport { get; set; }
+        public string EmployeeID { get; set; }
+        public string UserType { get; set; }  // Could be "Student", "Visitor", or "Staff"
     }
 
 

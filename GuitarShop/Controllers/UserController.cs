@@ -12,16 +12,22 @@ namespace GuitarShop.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IUserRepository _repoWrapper;
 
         public UserController(
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            IUserRepository repoWrapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _repoWrapper = repoWrapper;
         }
 
-        [HttpGet]
+      
+  
+
+    [HttpGet]
         public IActionResult ChangePassword()
         {
             return View();
