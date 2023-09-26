@@ -137,16 +137,17 @@ namespace GuitarShop.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteFacilityManagerConfirmed(int id)
+        public IActionResult DeleteFacilityManagerConfirmed(FacilityManager manager)
         {
-            var manager = _repoWrapper.FacilityManager.GetById(id);
             if (manager != null)
             {
                 _repoWrapper.FacilityManager.Delete(manager);
                 _repoWrapper.Save();
+                TempData["Message"] = $"{manager.FirstName} {manager.LastName} has been deleted";
             }
             return RedirectToAction("FacilityManagers");
         }
+
     }
 
 }

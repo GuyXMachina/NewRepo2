@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">@Model.Username</h5>
+        <h5 class="card-title">@Model.UserName</h5>
         <p class="card-text">
             <strong>Email:</strong> @Model.Email <br>
             <strong>User Type:</strong> @Model.UserType <br>
@@ -15,7 +15,7 @@
             }
             else if (Model.UserType == "Visitor")
             {
-                <strong>ID/Passport Number:</strong> @Model.IDNumberOrPassport <br>
+                <strong>ID/Passport Number:</strong> @Model.PassportNumberOrIDNo <br>
             }
             else if (Model.UserType == "Staff")
             {

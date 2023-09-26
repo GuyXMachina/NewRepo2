@@ -1,8 +1,41 @@
 ﻿@model IEnumerable<FacilityManager>
 
-<h1 class="text-center my-4">Manage Facility Managers</h1>
+<h2>Facility Managers</h2>
 
-<div class="container">
-    <!-- Similar to the Facilities list view but adapted for Facility Managers -->
-</div>
-
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>User ID</th>
+                <th>Actions</th> <!-- Column for Update button -->
+                <!-- Add more columns as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var manager in Model)
+            {
+                <tr>
+                    <td>@manager.FacilityManagerId</td>
+                    <td>@manager.FirstName</td>
+                    <td>@manager.LastName</td>
+                    <td>@manager.IdentityUserId</td>
+                    <td>
+                        <a asp-action="UpdateFacilityManager" asp-route-id="@manager.FacilityManagerId" class="btn btn-secondary">Update</a>
+                        <a asp-action="DeleteFacilityManager" asp-route-id="@manager.FacilityManagerId" class="btn btn-danger">Delete</a>
+                    </td>
+                    <!-- Add more fields as needed -->
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-action="CreateFacilityManager" class="btn btn-primary">Create New Manager</a>
+}
+else
+{
+    <p>No facility managers available. You can create a new one.</p>
+    <a asp-action="CreateFacilityManager" class="btn btn-primary">Create New Manager</a>
+}

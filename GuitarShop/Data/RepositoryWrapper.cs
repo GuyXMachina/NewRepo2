@@ -1,4 +1,5 @@
 ﻿using GuitarShop.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GuitarShop.Data
 {
@@ -118,7 +119,15 @@ namespace GuitarShop.Data
 
         public void Save()
         {
-            _appDbContext.SaveChanges();
+            try
+            {
+                _appDbContext.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                // Log the error, unwrap the inner exception, etc.
+                throw new Exception("There was a problem saving changes: " + ex.InnerException?.Message);
+            }
         }
     }
 }

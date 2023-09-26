@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GuitarShop.Models
 {
-    public class FacilityInCharge : IdentityUser
+    public class FacilityInCharge : User
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

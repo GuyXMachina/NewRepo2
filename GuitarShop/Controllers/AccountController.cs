@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using GuitarShop.Models;
 using GuitarShop.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 
@@ -10,12 +11,12 @@ namespace GuitarShop.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(UserManager<IdentityUser> userManager,
-        SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(UserManager<User> userManager,
+        SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -39,7 +40,7 @@ namespace GuitarShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user =
+                User user =
                   await _userManager.FindByEmailAsync(loginModel.Email);
                 if (user != null)
                 {
@@ -51,19 +52,19 @@ namespace GuitarShop.Controllers
                         var roles = await _userManager.GetRolesAsync(user);
                         if (roles.Contains("FacilityAdmin"))
                         {
-                            return Redirect("/Admin/Dashboard");
+                            return Redirect("/FacilityAdmin/Facilities");
                         }
                         else if (roles.Contains("FacilityManager"))
                         {
-                            return Redirect("/Manager/Dashboard");
+                            return Redirect("/FacilityManager/Index");
                         }
                         else if (roles.Contains("FacilityInCharge"))
                         {
-                            return Redirect("/InCharge/Dashboard");
+                            return Redirect("/FacilityInCharge/BoookingDetails");
                         }
                         else if (roles.Contains("User"))
                         {
-                            return Redirect("/User/Dashboard");
+                            return Redirect("/User/Profile");
                         }
                         // ... Add more roles as needed
 
@@ -99,7 +100,7 @@ namespace GuitarShop.Controllers
                     }
                 }
 
-                var user = new IdentityUser
+                var user = new User
                 {
                     UserName = registerModel.UserName,
                     Email = registerModel.Email

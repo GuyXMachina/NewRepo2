@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 
 namespace GuitarShop.Models
 {
@@ -27,7 +26,7 @@ namespace GuitarShop.Models
         public string Status { get; set; }
 
         // Navigation property for the user
-        public IdentityUser User { get; set; }
+        public User User { get; set; }
 
         // Navigation property for the transactions related to this order
         public virtual ICollection<Transaction> Transactions { get; set; }

@@ -1,7 +1,43 @@
 ﻿@model Facility
 
-<h1 class="text-center my-4">Create Facility</h1>
+<h2>Create a New Facility</h2>
 
-<div class="container">
-    <!-- Your form goes here, make sure to use Bootstrap classes for styling -->
-</div>
+<form asp-action="CreateFacility" asp-controller="FacilityAdmin" method="post">
+    <div class="form-group">
+        <label asp-for="Code">Facility Code</label>
+        <input asp-for="Code" class="form-control" />
+        <span asp-validation-for="Code" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Name">Facility Name</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price">Price</label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PricingType">Pricing Type</label>
+        <select asp-for="PricingType" class="form-control">
+            <option value="">Select Pricing Type</option>
+            <option value="Daily">Daily</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Monthly">Monthly</option>
+        </select>
+        <span asp-validation-for="PricingType" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoryID">Category ID</label>
+        <input asp-for="CategoryID" class="form-control" />
+        <span asp-validation-for="CategoryID" class="text-danger"></span>
+    </div>
+    <!-- Add more fields here like Location, Capacity, and AvailabilityTimes -->
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

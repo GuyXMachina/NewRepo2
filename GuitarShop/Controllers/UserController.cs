@@ -1,5 +1,6 @@
 ﻿using GuitarShop.Data;
 using GuitarShop.Models.ViewModels;
+using GuitarShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,24 +11,38 @@ namespace GuitarShop.Controllers
     [Authorize(Roles = "User")]
     public class UserController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly IUserRepository _repoWrapper;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
         public UserController(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
-            IUserRepository repoWrapper)
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _repoWrapper = repoWrapper;
+        }
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            UserProfileViewModel model = new UserProfileViewModel
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                UserType = user.UserType,
+                StudentNumber = user.StudentNumber,
+                EmployeeID = user.EmployeeID,
+                PassportNumberOrIDNo = user.PassportNumber
+            };
+
+            return View(model);
         }
 
-      
-  
-
-    [HttpGet]
+        [HttpGet]
         public IActionResult ChangePassword()
         {
             return View();

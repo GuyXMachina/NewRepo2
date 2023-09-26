@@ -32,13 +32,13 @@ namespace GuitarShop.Models
 
         public string FacilityManagerId { get; set; }
         [ForeignKey("FacilityManagerId")]
-        public virtual IdentityUser FacilityManager { get; set; }
+        public virtual User FacilityManager { get; set; }
 
         public string FacilityInChargeId { get; set; }
         [ForeignKey("FacilityInChargeId")]
-        public virtual IdentityUser FacilityInCharge { get; set; }
+        public virtual User FacilityInCharge { get; set; }
 
-        public virtual IdentityUser User { get; set; }  // Made it virtual for consistency
+        public virtual User User { get; set; }  // Made it virtual for consistency
     }
 
 }

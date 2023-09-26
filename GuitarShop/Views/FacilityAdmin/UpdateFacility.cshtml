@@ -1,8 +1,32 @@
-﻿@model Facility
+﻿@model Facility 
 
-<h1 class="text-center my-4">Update Facility</h1>
+<h2>Update Facility</h2>
 
-<div class="container">
-    <!-- Your form goes here, similar to CreateFacility but pre-filled -->
-</div>
+<form asp-action="UpdateFacility" asp-controller="FacilityAdmin" method="post">
+    <input type="hidden" asp-for="FacilityID" />
 
+    <div class="form-group">
+        <label asp-for="Code">Code</label>
+        <input asp-for="Code" class="form-control" />
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price">Price</label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PricingType">Pricing Type</label>
+        <select asp-for="PricingType" asp-items="Html.GetEnumSelectList<PricingType>()" class="form-control"></select>
+    </div>
+
+    <!-- Add other fields as needed -->
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Facilities" class="btn btn-secondary">Cancel</a>
+</form>

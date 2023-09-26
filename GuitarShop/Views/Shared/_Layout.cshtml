@@ -31,6 +31,9 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="FacilityAdmin" asp-action="Facilities">Manage Facilities</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="FacilityAdmin" asp-action="FacilityManagers">Manage Facility Managers</a>
+                        </li>
                     }
 
                     @if (User.IsInRole("FacilityManager"))
@@ -43,7 +46,7 @@
                     @if (User.IsInRole("FacilityInCharge"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="FacilityInCharge" asp-action="Bookings">Your Bookings</a>
+                            <a class="nav-link" asp-controller="FacilityInCharge" asp-action="BookingDetails">Your Bookings</a>
                         </li>
                     }
 
@@ -90,5 +93,6 @@
     </footer>
     <script asp-src-include="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script asp-src-include="lib/jquery/jquery.min.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

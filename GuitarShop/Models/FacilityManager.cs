@@ -17,10 +17,9 @@ namespace GuitarShop.Models
         [MaxLength(50)]
         public string LastName { get; set; }
 
-        public string IdentityUserId { get; set; }
-
+        public string? IdentityUserId { get; set; }
         [ForeignKey("IdentityUserId")]
-        public IdentityUser IdentityUser { get; set; }
+        public User IdentityUser { get; set; }
         public List<Facility> Facilities { get; set; }
 
         // Add any more fields specific to a Facility Manager

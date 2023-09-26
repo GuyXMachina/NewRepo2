@@ -29,6 +29,12 @@ namespace GuitarShop.Models.ViewModels
         [Display(Name = "E-mail")]
         [EmailAddress]
         public string Email { get; set; }
+        [Display(Name = "Student Number")]
+        public int StudentNumber { get; set; }
+        [Display(Name = "Employee ID")]
+        public string EmployeeNumber { get; set; }
+        [Display(Name = "Passport Or ID Number")]
+        public string PassportNumber { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -38,9 +44,6 @@ namespace GuitarShop.Models.ViewModels
         [Display(Name = "Confirm Password")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
-        public string StudentNumber { get; set; }
-        public string EmployeeNumber { get; set; }
-        public string PassportNumber { get; set; }
     }
 
     public class ChangePasswordViewModel
@@ -67,7 +70,7 @@ namespace GuitarShop.Models.ViewModels
         public string UserName { get; set; }
         public string Email { get; set; }
         public string StudentNumber { get; set; }
-        public string IDNumberOrPassport { get; set; }
+        public string PassportNumberOrIDNo { get; set; }
         public string EmployeeID { get; set; }
         public string UserType { get; set; }  // Could be "Student", "Visitor", or "Staff"
     }
