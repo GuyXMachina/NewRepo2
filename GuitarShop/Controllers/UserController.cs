@@ -29,14 +29,14 @@ namespace GuitarShop.Controllers
                 return RedirectToAction("Login");
             }
 
-            UserProfileViewModel model = new UserProfileViewModel
+            User model = new User
             {
                 UserName = user.UserName,
                 Email = user.Email,
                 UserType = user.UserType,
                 StudentNumber = user.StudentNumber,
                 EmployeeID = user.EmployeeID,
-                PassportNumberOrIDNo = user.PassportNumber
+                PassportNumber = user.PassportNumber
             };
 
             return View(model);

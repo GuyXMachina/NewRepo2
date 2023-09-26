@@ -90,7 +90,7 @@ namespace GuitarShop.Data
             {
                 UserName = "FacilityAdmin",
                 Email = "Admin@example.com",
-                UserType = "Admin" 
+                UserType = UserType.Staff 
             };
             var result = await userManager.CreateAsync(user, "Password123!");
 

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuitarShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230925180913_InitialMigration")]
+    [Migration("20230926162946_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -298,8 +298,8 @@ namespace GuitarShop.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("UserType")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

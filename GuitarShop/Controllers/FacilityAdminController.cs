@@ -2,6 +2,7 @@
 using GuitarShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace GuitarShop.Controllers
@@ -95,12 +96,24 @@ namespace GuitarShop.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check if IdentityUserId exists in the User table
+                if (!string.IsNullOrEmpty(model.IdentityUserId))
+                {
+                    var userExists = _repoWrapper.User.FindByCondition(u => u.Id == model.IdentityUserId).Any();
+                    if (!userExists)
+                    {
+                        ModelState.AddModelError("IdentityUserId", "The specified Identity User ID does not exist.");
+                        return View(model);
+                    }
+                }
+
                 _repoWrapper.FacilityManager.Create(model);
                 _repoWrapper.Save();
                 return RedirectToAction("FacilityManagers");
             }
             return View(model);
         }
+
 
         [HttpGet]
         public IActionResult UpdateFacilityManager(int id)

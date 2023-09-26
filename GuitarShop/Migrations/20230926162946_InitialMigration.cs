@@ -30,7 +30,7 @@ namespace GuitarShop.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserType = table.Column<int>(type: "int", nullable: false),
                     StudentNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmployeeID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PassportNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),

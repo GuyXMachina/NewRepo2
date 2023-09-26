@@ -23,13 +23,12 @@ namespace GuitarShop.Models
 
         [Required(ErrorMessage = "Please enter a facility price.")]
         [Column(TypeName = "decimal(18,2)")]
+        [Range(0, 9999.99, ErrorMessage = "Price must be between 0 and 9999.99")]
         public decimal Price { get; set; }
 
-        // Enum or predefined strings for pricing type
         [Required(ErrorMessage = "Please specify a pricing type.")]
-        public PricingType? PricingType { get; set; }
+        public PricingType PricingType { get; set; }  
 
-        // Remove hardcoded discount if not applicable
         public decimal? DiscountPercent { get; set; }
 
         public decimal DiscountAmount => (DiscountPercent ?? 0) * Price;

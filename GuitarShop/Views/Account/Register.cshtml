@@ -5,12 +5,7 @@
 <form asp-action="Register" asp-controller="Account" method="post">
     <div class="form-group">
         <label asp-for="UserType"></label>
-        <select asp-for="UserType" class="form-control" id="userTypeSelect">
-            <option value="">Select User Type</option>
-            <option value="Student">Student</option>
-            <option value="Visitor">Visitor</option>
-            <option value="Staff">Staff</option>
-        </select>
+        <select asp-for="UserType" asp-items="Html.GetEnumSelectList<UserType>()" class="form-control" id="userTypeSelect"></select>
     </div>
     <div class="form-group">
         <label asp-for="UserName"></label>
@@ -47,22 +42,23 @@
     <script>
         $(document).ready(function () {
             $('#userTypeSelect').change(function () {
-                let selectedType = $(this).val();
+                let selectedType = parseInt($(this).val());
                 // Hide all first
                 $('#studentNumberDiv').hide();
                 $('#employeeNumberDiv').hide();
                 $('#passportNumberDiv').hide();
                 // Show the selected
-                if (selectedType === 'Student') {
+                if (selectedType === 0) {  // Student
                     $('#studentNumberDiv').show();
-                } else if (selectedType === 'Visitor') {
+                } else if (selectedType === 1) {  // Visitor
                     $('#passportNumberDiv').show();
-                } else if (selectedType === 'Staff') {
+                } else if (selectedType === 2) {  // Staff
                     $('#employeeNumberDiv').show();
                 }
             });
         });
     </script>
 }
+
 
 

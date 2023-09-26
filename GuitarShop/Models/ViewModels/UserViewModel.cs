@@ -22,7 +22,7 @@ namespace GuitarShop.Models.ViewModels
         [Display(Name = "User Type")]
         public string UserType { get; set; }
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Name and surname")]
         public string UserName { get; set; }
 
         [Required]
@@ -30,7 +30,7 @@ namespace GuitarShop.Models.ViewModels
         [EmailAddress]
         public string Email { get; set; }
         [Display(Name = "Student Number")]
-        public int StudentNumber { get; set; }
+        public string StudentNumber { get; set; }
         [Display(Name = "Employee ID")]
         public string EmployeeNumber { get; set; }
         [Display(Name = "Passport Or ID Number")]
@@ -65,15 +65,15 @@ namespace GuitarShop.Models.ViewModels
         public string ConfirmPassword { get; set; }
     }
 
-    public class UserProfileViewModel
-    {
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string StudentNumber { get; set; }
-        public string PassportNumberOrIDNo { get; set; }
-        public string EmployeeID { get; set; }
-        public string UserType { get; set; }  // Could be "Student", "Visitor", or "Staff"
-    }
+    //public class UserProfileViewModel
+    //{
+    //    public string UserName { get; set; }
+    //    public string Email { get; set; }
+    //    public string StudentNumber { get; set; }
+    //    public string PassportNumberOrIDNo { get; set; }
+    //    public string EmployeeID { get; set; }
+    //    public string UserType { get; set; }  // Could be "Student", "Visitor", or "Staff"
+    //}
 
 
 }

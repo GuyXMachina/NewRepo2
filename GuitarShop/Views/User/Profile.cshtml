@@ -1,4 +1,4 @@
-﻿@model UserProfileViewModel
+﻿@model User
 
 <h2>User Profile</h2>
 
@@ -9,15 +9,15 @@
             <strong>Email:</strong> @Model.Email <br>
             <strong>User Type:</strong> @Model.UserType <br>
 
-            @if (Model.UserType == "Student")
+            @if (Model.UserType == UserType.Student)
             {
                 <strong>Student Number:</strong> @Model.StudentNumber <br>
             }
-            else if (Model.UserType == "Visitor")
+            else if (Model.UserType == UserType.Visitor)
             {
-                <strong>ID/Passport Number:</strong> @Model.PassportNumberOrIDNo <br>
+                <strong>ID/Passport Number:</strong> @Model.PassportNumber <br>
             }
-            else if (Model.UserType == "Staff")
+            else if (Model.UserType == UserType.Staff)
             {
                 <strong>Employer ID:</strong> @Model.EmployeeID <br>
             }
