@@ -1,6 +1,7 @@
 ﻿using GuitarShop.Data;
 using GuitarShop.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -11,10 +12,13 @@ namespace GuitarShop.Controllers
     public class FacilityAdminController : Controller
     {
         private readonly IRepositoryWrapper _repoWrapper;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public FacilityAdminController(IRepositoryWrapper repoWrapper)
+        public FacilityAdminController(IRepositoryWrapper repoWrapper, UserManager<User> userManager)
         {
             _repoWrapper = repoWrapper;
+            _userManager = userManager;
         }
 
         public IActionResult Facilities()
@@ -78,46 +82,79 @@ namespace GuitarShop.Controllers
             }
             return RedirectToAction("Facilities");
         }
-
-        public IActionResult FacilityManagers()
+        [HttpGet]
+        public async Task<IActionResult> FacilityManagers()
         {
-            var managers = _repoWrapper.FacilityManager.FindAll();
+            var managers = await _userManager.GetUsersInRoleAsync("FacilityManager");
+
+            // Debug prints
+            Console.WriteLine($"Fetched {managers.Count()} managers.");
+            foreach (var manager in managers)
+            {
+                Console.WriteLine($"Manager ID: {manager.EmployeeID}, Name: {manager.Name}");
+            }
+
             return View(managers);
         }
 
         [HttpGet]
-        public IActionResult CreateFacilityManager()
+        public ViewResult CreateFacilityManager()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult CreateFacilityManager(FacilityManager model)
+        public async Task<IActionResult> CreateFacilityManager(User model)
         {
+            Console.WriteLine("Entered method");  // Debugging line
             if (ModelState.IsValid)
             {
-                var newManager = new FacilityManager
+                if (await _userManager.FindByEmailAsync(model.Email) != null)
+                {
+                    ModelState.AddModelError("Email", "This email is already used!");
+                    return View(model);
+                }
+                Console.WriteLine("Model is valid");  // Debugging line
+                User user = new()
                 {
                     Name = model.Name,
                     Surname = model.Surname,
+                    UserName = model.Name + model.Surname,
                     Email = model.Email,
-                    UserType = UserType.Staff,
-                    EmployeeID = model.Email,
-                    Id = $"{model.Email.Trim()} {model.Name.Trim()}{model.Surname.Trim()}"
+                    UserType = UserType.Staff
                 };
-
-                _repoWrapper.FacilityManager.Create(model);
-                _repoWrapper.Save();
-                return RedirectToAction("FacilityManagers");
+                // Create FacilityManager asynchronously
+                IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    Console.WriteLine("User created successfully");  // Debugging line
+                    // Add FacilityManager role to user
+                    await _userManager.AddToRoleAsync(user, "FacilityManager");
+                    await _userManager.UpdateAsync(user);
+                    return RedirectToAction("FacilityManagers");
+                }
+                else
+                {
+                    Console.WriteLine("User creation failed");  // Debugging line
+                    foreach (var error in result.Errors)
+                    {
+                        Console.WriteLine($"Error: {error.Description}");
+                    }
+                    AddErrorsFromResult(result);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Model is invalid");  // Debugging line
             }
             return View(model);
         }
 
 
         [HttpGet]
-        public IActionResult UpdateFacilityManager(string id)
+        public async Task<IActionResult> UpdateFacilityManager(string id)
         {
-            var manager = _repoWrapper.FacilityManager.GetById(id);
+            var manager = await _userManager.FindByIdAsync(id);
             if (manager == null)
             {
                 return NotFound();
@@ -126,21 +163,27 @@ namespace GuitarShop.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateFacilityManager(FacilityManager model)
+        public async Task<IActionResult> UpdateFacilityManager(FacilityManager model)
         {
             if (ModelState.IsValid)
             {
-                _repoWrapper.FacilityManager.Update(model);
-                _repoWrapper.Save();
-                return RedirectToAction("FacilityManagers");
+                var result = await _userManager.UpdateAsync(model);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("FacilityManagers");
+                }
+                else
+                {
+                    AddErrorsFromResult(result);
+                }
             }
             return View(model);
         }
 
         [HttpGet]
-        public IActionResult DeleteFacilityManager(string id)
+        public async Task<IActionResult> DeleteFacilityManager(string id)
         {
-            var manager = _repoWrapper.FacilityManager.GetById(id);
+            var manager = await _userManager.FindByIdAsync(id);
             if (manager == null)
             {
                 return NotFound();
@@ -149,16 +192,32 @@ namespace GuitarShop.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteFacilityManagerConfirmed(FacilityManager manager)
+        public async Task<IActionResult> DeleteFacilityManagerConfirmed(FacilityManager manager)
         {
             if (manager != null)
             {
-                _repoWrapper.FacilityManager.Delete(manager);
-                _repoWrapper.Save();
-                TempData["Message"] = $"{manager.Name} {manager.Surname} has been deleted";
+                var result = await _userManager.DeleteAsync(manager);
+                if (result.Succeeded)
+                {
+                    TempData["Message"] = $"{manager.Name} {manager.Surname} has been deleted";
+                    return RedirectToAction("FacilityManagers");
+                }
+                else
+                {
+                    AddErrorsFromResult(result);
+                }
             }
-            return RedirectToAction("FacilityManagers");
+            return View("FacilityManagers");
         }
+
+        private void AddErrorsFromResult(IdentityResult result)
+        {
+            foreach (IdentityError error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+        }
+
 
     }
 

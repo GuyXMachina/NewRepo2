@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GuitarShop.Migrations
 {
     /// <inheritdoc />
-    public partial class MaxTech : Migration
+    public partial class Las : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,18 +26,31 @@ namespace GuitarShop.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "Category",
+                columns: table => new
+                {
+                    CategoryID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.CategoryID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "User",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserType = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StudentNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmployeeID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PassportNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -55,20 +68,7 @@ namespace GuitarShop.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Categories",
-                columns: table => new
-                {
-                    CategoryID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categories", x => x.CategoryID);
+                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -106,9 +106,9 @@ namespace GuitarShop.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        name: "FK_AspNetUserClaims_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -126,9 +126,9 @@ namespace GuitarShop.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        name: "FK_AspNetUserLogins_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -150,9 +150,9 @@ namespace GuitarShop.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        name: "FK_AspNetUserRoles_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -170,15 +170,49 @@ namespace GuitarShop.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        name: "FK_AspNetUserTokens_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "FacilityInCharge",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FacilityInCharge", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FacilityInCharge_User_Id",
+                        column: x => x.Id,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FacilityManager",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FacilityManager", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FacilityManager_User_Id",
+                        column: x => x.Id,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Order",
                 columns: table => new
                 {
                     OrderID = table.Column<int>(type: "int", nullable: false)
@@ -190,17 +224,17 @@ namespace GuitarShop.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.OrderID);
+                    table.PrimaryKey("PK_Order", x => x.OrderID);
                     table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_UserID",
+                        name: "FK_Order_User_UserID",
                         column: x => x.UserID,
-                        principalTable: "AspNetUsers",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Facilities",
+                name: "Facility",
                 columns: table => new
                 {
                     FacilityID = table.Column<int>(type: "int", nullable: false)
@@ -210,30 +244,30 @@ namespace GuitarShop.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PricingType = table.Column<int>(type: "int", nullable: false),
                     DiscountPercent = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryID = table.Column<int>(type: "int", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     AvailabilityTimes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CategoryID = table.Column<int>(type: "int", nullable: true),
                     FacilityManagerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Facilities", x => x.FacilityID);
+                    table.PrimaryKey("PK_Facility", x => x.FacilityID);
                     table.ForeignKey(
-                        name: "FK_Facilities_AspNetUsers_FacilityManagerId",
-                        column: x => x.FacilityManagerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Facilities_Categories_CategoryID",
+                        name: "FK_Facility_Category_CategoryID",
                         column: x => x.CategoryID,
-                        principalTable: "Categories",
-                        principalColumn: "CategoryID");
+                        principalTable: "Category",
+                        principalColumn: "CategoryID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Facility_FacilityManager_FacilityManagerId",
+                        column: x => x.FacilityManagerId,
+                        principalTable: "FacilityManager",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bookings",
+                name: "Booking",
                 columns: table => new
                 {
                     BookingID = table.Column<int>(type: "int", nullable: false)
@@ -249,38 +283,38 @@ namespace GuitarShop.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bookings", x => x.BookingID);
+                    table.PrimaryKey("PK_Booking", x => x.BookingID);
                     table.ForeignKey(
-                        name: "FK_Bookings_AspNetUsers_FacilityInChargeId",
-                        column: x => x.FacilityInChargeId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Bookings_AspNetUsers_FacilityInChargeId1",
+                        name: "FK_Booking_FacilityInCharge_FacilityInChargeId1",
                         column: x => x.FacilityInChargeId1,
-                        principalTable: "AspNetUsers",
+                        principalTable: "FacilityInCharge",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Bookings_AspNetUsers_FacilityManagerId",
-                        column: x => x.FacilityManagerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Bookings_AspNetUsers_UserID",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        name: "FK_Booking_Facility_FacilityID",
+                        column: x => x.FacilityID,
+                        principalTable: "Facility",
+                        principalColumn: "FacilityID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bookings_Facilities_FacilityID",
-                        column: x => x.FacilityID,
-                        principalTable: "Facilities",
-                        principalColumn: "FacilityID",
+                        name: "FK_Booking_User_FacilityInChargeId",
+                        column: x => x.FacilityInChargeId,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Booking_User_FacilityManagerId",
+                        column: x => x.FacilityManagerId,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Booking_User_UserID",
+                        column: x => x.UserID,
+                        principalTable: "User",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
+                name: "Transaction",
                 columns: table => new
                 {
                     TransactionID = table.Column<int>(type: "int", nullable: false)
@@ -293,17 +327,17 @@ namespace GuitarShop.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transactions", x => x.TransactionID);
+                    table.PrimaryKey("PK_Transaction", x => x.TransactionID);
                     table.ForeignKey(
-                        name: "FK_Transactions_Bookings_BookingID",
+                        name: "FK_Transaction_Booking_BookingID",
                         column: x => x.BookingID,
-                        principalTable: "Bookings",
+                        principalTable: "Booking",
                         principalColumn: "BookingID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transactions_Orders_OrderID",
+                        name: "FK_Transaction_Order_OrderID",
                         column: x => x.OrderID,
-                        principalTable: "Orders",
+                        principalTable: "Order",
                         principalColumn: "OrderID");
                 });
 
@@ -335,66 +369,73 @@ namespace GuitarShop.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                table: "AspNetUsers",
-                column: "NormalizedEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_FacilityID",
-                table: "Bookings",
+                name: "IX_Booking_FacilityID",
+                table: "Booking",
                 column: "FacilityID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_FacilityInChargeId",
-                table: "Bookings",
+                name: "IX_Booking_FacilityInChargeId",
+                table: "Booking",
                 column: "FacilityInChargeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_FacilityInChargeId1",
-                table: "Bookings",
+                name: "IX_Booking_FacilityInChargeId1",
+                table: "Booking",
                 column: "FacilityInChargeId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_FacilityManagerId",
-                table: "Bookings",
+                name: "IX_Booking_FacilityManagerId",
+                table: "Booking",
                 column: "FacilityManagerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_UserID",
-                table: "Bookings",
+                name: "IX_Booking_UserID",
+                table: "Booking",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Facilities_CategoryID",
-                table: "Facilities",
+                name: "IX_Facility_CategoryID",
+                table: "Facility",
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Facilities_FacilityManagerId",
-                table: "Facilities",
+                name: "IX_Facility_FacilityManagerId",
+                table: "Facility",
                 column: "FacilityManagerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_UserID",
-                table: "Orders",
+                name: "IX_Order_UserID",
+                table: "Order",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_BookingID",
-                table: "Transactions",
+                name: "IX_Transaction_BookingID",
+                table: "Transaction",
                 column: "BookingID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_OrderID",
-                table: "Transactions",
+                name: "IX_Transaction_OrderID",
+                table: "Transaction",
                 column: "OrderID");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "User",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_Email",
+                table: "User",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "User",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
         }
 
         /// <inheritdoc />
@@ -416,25 +457,31 @@ namespace GuitarShop.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "Transaction");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Bookings");
+                name: "Booking");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Order");
 
             migrationBuilder.DropTable(
-                name: "Facilities");
+                name: "FacilityInCharge");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Facility");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Category");
+
+            migrationBuilder.DropTable(
+                name: "FacilityManager");
+
+            migrationBuilder.DropTable(
+                name: "User");
         }
     }
 }

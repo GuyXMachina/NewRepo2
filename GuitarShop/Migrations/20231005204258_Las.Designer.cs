@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuitarShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231005004221_MaxTech")]
-    partial class MaxTech
+    [Migration("20231005204258_Las")]
+    partial class Las
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,7 +72,7 @@ namespace GuitarShop.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Booking", (string)null);
                 });
 
             modelBuilder.Entity("GuitarShop.Models.Category", b =>
@@ -89,7 +89,7 @@ namespace GuitarShop.Migrations
 
                     b.HasKey("CategoryID");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("GuitarShop.Models.Facility", b =>
@@ -106,12 +106,8 @@ namespace GuitarShop.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryID")
+                    b.Property<int>("CategoryID")
                         .HasColumnType("int");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -142,7 +138,7 @@ namespace GuitarShop.Migrations
 
                     b.HasIndex("FacilityManagerId");
 
-                    b.ToTable("Facilities");
+                    b.ToTable("Facility", (string)null);
                 });
 
             modelBuilder.Entity("GuitarShop.Models.Order", b =>
@@ -172,7 +168,7 @@ namespace GuitarShop.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("GuitarShop.Models.Transaction", b =>
@@ -206,7 +202,7 @@ namespace GuitarShop.Migrations
 
                     b.HasIndex("OrderID");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transaction", (string)null);
                 });
 
             modelBuilder.Entity("GuitarShop.Models.User", b =>
@@ -219,10 +215,6 @@ namespace GuitarShop.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -253,6 +245,9 @@ namespace GuitarShop.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PassportNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
@@ -288,6 +283,10 @@ namespace GuitarShop.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -296,11 +295,9 @@ namespace GuitarShop.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("User", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -440,14 +437,14 @@ namespace GuitarShop.Migrations
                 {
                     b.HasBaseType("GuitarShop.Models.User");
 
-                    b.HasDiscriminator().HasValue("FacilityInCharge");
+                    b.ToTable("FacilityInCharge", (string)null);
                 });
 
             modelBuilder.Entity("GuitarShop.Models.FacilityManager", b =>
                 {
                     b.HasBaseType("GuitarShop.Models.User");
 
-                    b.HasDiscriminator().HasValue("FacilityManager");
+                    b.ToTable("FacilityManager", (string)null);
                 });
 
             modelBuilder.Entity("GuitarShop.Models.Booking", b =>
@@ -489,7 +486,9 @@ namespace GuitarShop.Migrations
                 {
                     b.HasOne("GuitarShop.Models.Category", "Category")
                         .WithMany("Facilities")
-                        .HasForeignKey("CategoryID");
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("GuitarShop.Models.FacilityManager", "FacilityManager")
                         .WithMany("Facilities")
@@ -573,6 +572,24 @@ namespace GuitarShop.Migrations
                     b.HasOne("GuitarShop.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GuitarShop.Models.FacilityInCharge", b =>
+                {
+                    b.HasOne("GuitarShop.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("GuitarShop.Models.FacilityInCharge", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GuitarShop.Models.FacilityManager", b =>
+                {
+                    b.HasOne("GuitarShop.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("GuitarShop.Models.FacilityManager", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

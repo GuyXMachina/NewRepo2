@@ -1,5 +1,6 @@
 ﻿using GuitarShop.Data.DataAccess;
 using GuitarShop.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -25,7 +26,12 @@ namespace GuitarShop.Data
 
         public IEnumerable<T> FindAll()
         {
-            return _appDbContext.Set<T>();
+            return _appDbContext.Set<T>().ToList();
+        }
+
+        public async Task<List<T>> FindAllAsync()
+        {
+            return await _appDbContext.Set<T>().ToListAsync();
         }
 
         public IEnumerable<T> FindByCondition(Expression<Func<T, bool>> expression)

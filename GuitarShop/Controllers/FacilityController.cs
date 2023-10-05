@@ -12,6 +12,7 @@ namespace GuitarShop.Controllers
     public class FacilityController : Controller
     {
         private readonly IRepositoryWrapper _repo;
+
         public FacilityController(IRepositoryWrapper repo)
         {
             _repo = repo;

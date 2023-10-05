@@ -1,9 +1,14 @@
-﻿@model FacilityManager
+﻿@model User
 
 <div class="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
     <h2 class="text-2xl font-semibold mb-4">Create Facility Manager</h2>
 
     <form asp-action="CreateFacilityManager" asp-controller="FacilityAdmin" method="post">
+        <div class="mb-4">
+            <label asp-for="EmployeeID" class="block text-sm font-medium text-gray-600">Manager ID</label>
+            <input asp-for="EmployeeID" class="mt-1 p-2 w-full border rounded-md" />
+        </div>
+
         <div class="mb-4">
             <label asp-for="Name" class="block text-sm font-medium text-gray-600">First Name</label>
             <input asp-for="Name" class="mt-1 p-2 w-full border rounded-md" />
@@ -17,6 +22,10 @@
         <div class="mb-4">
             <label asp-for="Email" class="block text-sm font-medium text-gray-600">Email</label>
             <input asp-for="Email" class="mt-1 p-2 w-full border rounded-md" />
+        </div>
+        <div class="mb-4">
+            <label asp-for="Password" class="block text-sm font-medium text-gray-600">Password</label>
+            <input asp-for="Password" class="mt-1 p-2 w-full border rounded-md" />
         </div>
 
         <!-- Add other fields as needed -->

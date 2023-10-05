@@ -1,10 +1,10 @@
-﻿@model IEnumerable<FacilityManager>
+﻿@model IEnumerable<User>
 
 <h2>Facility Managers</h2>
 
 @if (Model.Any())
 {
-    <table class="table">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>ID</th>
@@ -18,12 +18,12 @@
             @foreach (var manager in Model)
             {
                 <tr>
-                    <td>@manager.EmployeeID</td>
+                    <td>@manager.Id</td>
                     <td>@manager.Name</td>
                     <td>@manager.Surname</td>
                     <td>
-                        <a asp-action="UpdateFacilityManager" asp-route-id="@manager.EmployeeID" class="btn btn-secondary">Update</a>
-                        <a asp-action="DeleteFacilityManager" asp-route-id="@manager.EmployeeID" class="btn btn-danger">Delete</a>
+                        <a asp-action="UpdateFacilityManager" asp-route-id="@manager.Id" class="btn btn-secondary">Update</a>
+                        <a asp-action="DeleteFacilityManager" asp-route-id="@manager.Id" class="btn btn-danger">Delete</a>
                     </td>
                     <!-- Add more fields as needed -->
                 </tr>

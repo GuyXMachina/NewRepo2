@@ -8,6 +8,7 @@ namespace GuitarShop.Data
     {
         T GetById(string id);
         T GetById(int id);
+        Task<List<T>> FindAllAsync();
         IEnumerable<T> FindAll();
         IEnumerable<T> FindByCondition(Expression<Func<T, bool>> expression);
         IEnumerable<T> GetWithOptions(QueryOptions<T> options);

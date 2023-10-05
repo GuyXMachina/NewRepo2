@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,6 +10,7 @@ namespace GuitarShop.Models
         Weekly,
         Monthly
     }
+
     public class Facility
     {
         [Key]
@@ -27,23 +28,20 @@ namespace GuitarShop.Models
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Please specify a pricing type.")]
-        public PricingType PricingType { get; set; }  
+        public PricingType PricingType { get; set; }
 
         public decimal? DiscountPercent { get; set; }
-
         public decimal DiscountAmount => (DiscountPercent ?? 0) * Price;
-
         public decimal DiscountPrice => Price - DiscountAmount;
 
         [Required(ErrorMessage = "Please select a category.")]
-        public string CategoryName { get; set; }
+        [ForeignKey("Category")]
+        public int CategoryID { get; set; }
 
-        // Additional facility-specific fields
         public string Location { get; set; }
         public int Capacity { get; set; }
         public string AvailabilityTimes { get; set; }
 
-        // Remove Slug if not needed
         public string Slug
         {
             get
@@ -55,10 +53,9 @@ namespace GuitarShop.Models
             }
         }
 
-        // Navigation property
-        public ICollection<Booking> Bookings { get; set; }
+        // Navigation properties
         public Category Category { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
         public FacilityManager FacilityManager { get; set; }
     }
-
 }

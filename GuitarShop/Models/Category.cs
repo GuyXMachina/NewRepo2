@@ -4,6 +4,7 @@ namespace GuitarShop.Models
 {
     public class Category
     {
+        [Key]
         public int CategoryID { get; set; }
 
         [Required(ErrorMessage = "Please enter a category name.")]

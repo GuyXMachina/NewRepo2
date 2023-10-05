@@ -32,7 +32,7 @@ namespace GuitarShop.Data
                 context.Facilities.AddRange(
                     new Facility
                     {
-                        CategoryName = "Gym",
+                        CategoryID = context.Categories.First(c => c.CategoryName == "Gym").CategoryID,
                         Code = "Gym_QQ",
                         Name = "Main Gym",
                         Price = (decimal)10.00,
@@ -40,7 +40,7 @@ namespace GuitarShop.Data
                     },
                     new Facility
                     {
-                        CategoryName = "Laundry Service",
+                        CategoryID = context.Categories.First(c=> c.CategoryName == "Laundry Service").CategoryID,
                         Code = "laundry_QQ",
                         Name = "Laundry Room 1",
                         Price = (decimal)5.00,
@@ -48,7 +48,7 @@ namespace GuitarShop.Data
                     },
                     new Facility
                     {
-                        CategoryName = "Parking Service",
+                        CategoryID = context.Categories.First(c => c.CategoryName == "Parking Service").CategoryID,
                         Code = "Parking_QQ",
                         Name = "Parking Lot A",
                         Price = (decimal)3.00,
@@ -56,7 +56,7 @@ namespace GuitarShop.Data
                     },
                     new Facility
                     {
-                        CategoryName = "Library Discussion Room",
+                        CategoryID = context.Categories.First(c => c.CategoryName == "Library Discussion Room").CategoryID,
                         Code = "library_QQ",
                         Name = "Library Discussion Room 1",
                         Price = (decimal)0.00,
@@ -91,8 +91,7 @@ namespace GuitarShop.Data
             {
                 UserName = "FacilityAdmin",
                 Email = "Admin@example.com",
-                UserType = UserType.Staff, 
-                Id = "The User admin"
+                UserType = UserType.Staff
             };
             var adminResult = await userManager.CreateAsync(adminUser, "Password123!");
 
@@ -105,9 +104,10 @@ namespace GuitarShop.Data
             var managerUser = new User
             {
                 UserName = "FacilityManager",
+                Name = "Admin",
+                Surname = "Admin",
                 Email = "Manager@example.com",
-                UserType = UserType.Staff,
-                Id = "The User manager"
+                UserType = UserType.Staff
             };
             var managerResult = await userManager.CreateAsync(managerUser, "Password123!");
 
@@ -121,8 +121,7 @@ namespace GuitarShop.Data
             {
                 UserName = "FacilityInCharge",
                 Email = "InCharge@example.com",
-                UserType = UserType.Staff,
-                Id = "The User in charge"
+                UserType = UserType.Staff
             };
             var inChargeResult = await userManager.CreateAsync(inChargeUser, "Password123!");
 
@@ -136,8 +135,7 @@ namespace GuitarShop.Data
             {
                 UserName = "RegularUser",
                 Email = "User@example.com",
-                UserType = UserType.Student,
-                Id = "The User"
+                UserType = UserType.Student
             };
             var userResult = await userManager.CreateAsync(regularUser, "Password123!");
 
