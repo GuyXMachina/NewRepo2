@@ -33,6 +33,11 @@ namespace GuitarShop.Data
             return _appDbContext.Set<T>().Where(expression);
         }
 
+        public T GetById(string id)
+        {
+            return _appDbContext.Set<T>().Find(id);
+        }
+
         public T GetById(int id)
         {
             return _appDbContext.Set<T>().Find(id);

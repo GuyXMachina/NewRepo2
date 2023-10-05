@@ -17,11 +17,11 @@ namespace GuitarShop.Data
                 .ToList();
         }
 
-        public FacilityManager GetManagerById(int id)
+        public FacilityManager GetManagerById(string id)
         {
             return _appDbContext.FacilityManagers
                 .Include(fm => fm.Facilities)
-                .FirstOrDefault(fm => fm.FacilityManagerId == id);
+                .FirstOrDefault(fm => fm.Id == id);  // Compare the Id property, not the object
         }
 
         public void UpdateManager(FacilityManager managerToUpdate)

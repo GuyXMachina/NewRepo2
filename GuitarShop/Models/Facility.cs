@@ -36,7 +36,7 @@ namespace GuitarShop.Models
         public decimal DiscountPrice => Price - DiscountAmount;
 
         [Required(ErrorMessage = "Please select a category.")]
-        public int CategoryID { get; set; }
+        public string CategoryName { get; set; }
 
         // Additional facility-specific fields
         public string Location { get; set; }

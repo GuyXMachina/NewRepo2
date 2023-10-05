@@ -6,6 +6,7 @@ namespace GuitarShop.Data
 {
     public interface IRepositoryBase<T>
     {
+        T GetById(string id);
         T GetById(int id);
         IEnumerable<T> FindAll();
         IEnumerable<T> FindByCondition(Expression<Func<T, bool>> expression);

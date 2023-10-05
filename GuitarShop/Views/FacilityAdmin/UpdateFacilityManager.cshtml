@@ -4,21 +4,21 @@
 
 <form asp-action="UpdateFacilityManager" asp-controller="FacilityAdmin" method="post">
     <!-- Hidden field for the ID -->
-    <input type="hidden" asp-for="FacilityManagerId" />
+    <input type="hidden" asp-for="EmployeeID" />
 
     <div class="form-group">
-        <label asp-for="FirstName">First Name</label>
-        <input asp-for="FirstName" class="form-control" />
+        <label asp-for="Name">First Name</label>
+        <input asp-for="Name" class="form-control" />
     </div>
 
     <div class="form-group">
-        <label asp-for="LastName">Last Name</label>
-        <input asp-for="LastName" class="form-control" />
+        <label asp-for="Surname">Last Name</label>
+        <input asp-for="Surname" class="form-control" />
     </div>
 
     <div class="form-group">
-        <label asp-for="IdentityUserId">User ID</label>
-        <input asp-for="IdentityUserId" class="form-control" />
+        <label asp-for="EmployeeID">User ID</label>
+        <input asp-for="EmployeeID" class="form-control" />
     </div>
 
     <!-- Add other fields as needed -->

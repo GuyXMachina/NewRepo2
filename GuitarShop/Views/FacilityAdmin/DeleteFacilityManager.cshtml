@@ -1,4 +1,4 @@
-﻿@model FacilityManager
+﻿@model User
 
 <h2>Delete Facility Manager</h2>
 
@@ -12,19 +12,19 @@
             First Name
         </dt>
         <dd class="col-sm-10">
-            @Model.FirstName
+            @Model.Name
         </dd>
         <dt class="col-sm-2">
             Last Name
         </dt>
         <dd class="col-sm-10">
-            @Model.LastName
+            @Model.Surname
         </dd>
         <!-- Add other fields as needed -->
     </dl>
 
     <form asp-action="DeleteFacilityManagerConfirmed" asp-controller="FacilityAdmin" method="post">
-        <input type="hidden" asp-for="FacilityManagerId" />
+        <input type="hidden" asp-for="EmployeeID" />
         <input type="submit" value="Delete" class="btn btn-danger" />
         <a asp-action="FacilityManagers" class="btn btn-secondary">Cancel</a>
     </form>

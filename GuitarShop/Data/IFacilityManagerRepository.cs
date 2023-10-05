@@ -6,7 +6,7 @@ namespace GuitarShop.Data
     {
         // Additional methods specific to FacilityManager
         IEnumerable<FacilityManager> GetAllManagers();
-        FacilityManager GetManagerById(int id);
+        FacilityManager GetManagerById(string id);
         void UpdateManager(FacilityManager managerToUpdate);
 
         // ... any other methods needed

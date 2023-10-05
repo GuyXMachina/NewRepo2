@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuitarShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230926162946_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20231005004221_MaxTech")]
+    partial class MaxTech
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,8 +106,12 @@ namespace GuitarShop.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryID")
+                    b.Property<int?>("CategoryID")
                         .HasColumnType("int");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -116,8 +120,8 @@ namespace GuitarShop.Migrations
                     b.Property<decimal?>("DiscountPercent")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("FacilityManagerId")
-                        .HasColumnType("int");
+                    b.Property<string>("FacilityManagerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
@@ -139,34 +143,6 @@ namespace GuitarShop.Migrations
                     b.HasIndex("FacilityManagerId");
 
                     b.ToTable("Facilities");
-                });
-
-            modelBuilder.Entity("GuitarShop.Models.FacilityManager", b =>
-                {
-                    b.Property<int>("FacilityManagerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FacilityManagerId"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("IdentityUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("FacilityManagerId");
-
-                    b.HasIndex("IdentityUserId");
-
-                    b.ToTable("FacilityManagers");
                 });
 
             modelBuilder.Entity("GuitarShop.Models.Order", b =>
@@ -265,6 +241,9 @@ namespace GuitarShop.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -285,10 +264,16 @@ namespace GuitarShop.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -455,16 +440,14 @@ namespace GuitarShop.Migrations
                 {
                     b.HasBaseType("GuitarShop.Models.User");
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfilePictureUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasDiscriminator().HasValue("FacilityInCharge");
+                });
+
+            modelBuilder.Entity("GuitarShop.Models.FacilityManager", b =>
+                {
+                    b.HasBaseType("GuitarShop.Models.User");
+
+                    b.HasDiscriminator().HasValue("FacilityManager");
                 });
 
             modelBuilder.Entity("GuitarShop.Models.Booking", b =>
@@ -506,9 +489,7 @@ namespace GuitarShop.Migrations
                 {
                     b.HasOne("GuitarShop.Models.Category", "Category")
                         .WithMany("Facilities")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryID");
 
                     b.HasOne("GuitarShop.Models.FacilityManager", "FacilityManager")
                         .WithMany("Facilities")
@@ -517,15 +498,6 @@ namespace GuitarShop.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("FacilityManager");
-                });
-
-            modelBuilder.Entity("GuitarShop.Models.FacilityManager", b =>
-                {
-                    b.HasOne("GuitarShop.Models.User", "IdentityUser")
-                        .WithMany()
-                        .HasForeignKey("IdentityUserId");
-
-                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("GuitarShop.Models.Order", b =>
@@ -615,11 +587,6 @@ namespace GuitarShop.Migrations
                     b.Navigation("Bookings");
                 });
 
-            modelBuilder.Entity("GuitarShop.Models.FacilityManager", b =>
-                {
-                    b.Navigation("Facilities");
-                });
-
             modelBuilder.Entity("GuitarShop.Models.Order", b =>
                 {
                     b.Navigation("Transactions");
@@ -628,6 +595,11 @@ namespace GuitarShop.Migrations
             modelBuilder.Entity("GuitarShop.Models.FacilityInCharge", b =>
                 {
                     b.Navigation("AssignedBookings");
+                });
+
+            modelBuilder.Entity("GuitarShop.Models.FacilityManager", b =>
+                {
+                    b.Navigation("Facilities");
                 });
 #pragma warning restore 612, 618
         }

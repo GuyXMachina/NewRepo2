@@ -65,12 +65,12 @@ namespace GuitarShop.Controllers
 
                 int iCatId = category.CategoryID;
 
-                iTotalProducts = _repo.Facility.FindByCondition(p => p.CategoryID == iCatId).Count();
+                iTotalProducts = _repo.Facility.FindByCondition(p => p.Category.CategoryID == iCatId).Count();
                 products = _repo.Facility.GetWithOptions(new QueryOptions<Facility>
                 {
                     OrderBy = orderBy,
                     OrderByDirection = orderByDirection,
-                    Where = p => p.CategoryID == iCatId,
+                    Where = p => p.Category.CategoryID == iCatId,
                     PageNumber = Page,
                     PageSize = iPageSize
                 });

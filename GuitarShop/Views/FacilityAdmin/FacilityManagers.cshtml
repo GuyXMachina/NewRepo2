@@ -10,7 +10,6 @@
                 <th>ID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
-                <th>User ID</th>
                 <th>Actions</th> <!-- Column for Update button -->
                 <!-- Add more columns as needed -->
             </tr>
@@ -19,13 +18,12 @@
             @foreach (var manager in Model)
             {
                 <tr>
-                    <td>@manager.FacilityManagerId</td>
-                    <td>@manager.FirstName</td>
-                    <td>@manager.LastName</td>
-                    <td>@manager.IdentityUserId</td>
+                    <td>@manager.EmployeeID</td>
+                    <td>@manager.Name</td>
+                    <td>@manager.Surname</td>
                     <td>
-                        <a asp-action="UpdateFacilityManager" asp-route-id="@manager.FacilityManagerId" class="btn btn-secondary">Update</a>
-                        <a asp-action="DeleteFacilityManager" asp-route-id="@manager.FacilityManagerId" class="btn btn-danger">Delete</a>
+                        <a asp-action="UpdateFacilityManager" asp-route-id="@manager.EmployeeID" class="btn btn-secondary">Update</a>
+                        <a asp-action="DeleteFacilityManager" asp-route-id="@manager.EmployeeID" class="btn btn-danger">Delete</a>
                     </td>
                     <!-- Add more fields as needed -->
                 </tr>

@@ -21,7 +21,7 @@ namespace GuitarShop.Controllers
             return View(bookings);
         }
 
-        public IActionResult Details(int id)
+        public IActionResult Details(string id)
         {
             var booking = _bookingRepository.Booking.GetById(id);
             if (booking == null)
@@ -50,7 +50,7 @@ namespace GuitarShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string id)
         {
             var booking = _bookingRepository.Booking.GetById(id);
             if (booking == null)
@@ -79,7 +79,7 @@ namespace GuitarShop.Controllers
 
         [HttpGet]
         [Authorize(Roles = "FacilityAdmin, FacilityInCharge")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             var booking = _bookingRepository.Booking.GetById(id);
             if (booking == null)
@@ -92,7 +92,7 @@ namespace GuitarShop.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "FacilityAdmin, FacilityInCharge")]
-        public IActionResult DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(string id)
         {
             var booking = _bookingRepository.Booking.GetById(id);
             if (booking != null)

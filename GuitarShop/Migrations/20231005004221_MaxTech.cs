@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GuitarShop.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class MaxTech : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,13 +31,13 @@ namespace GuitarShop.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserType = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StudentNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmployeeID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PassportNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -178,26 +178,6 @@ namespace GuitarShop.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FacilityManagers",
-                columns: table => new
-                {
-                    FacilityManagerId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    IdentityUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FacilityManagers", x => x.FacilityManagerId);
-                    table.ForeignKey(
-                        name: "FK_FacilityManagers_AspNetUsers_IdentityUserId",
-                        column: x => x.IdentityUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -230,26 +210,26 @@ namespace GuitarShop.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PricingType = table.Column<int>(type: "int", nullable: false),
                     DiscountPercent = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    CategoryID = table.Column<int>(type: "int", nullable: false),
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     AvailabilityTimes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FacilityManagerId = table.Column<int>(type: "int", nullable: true)
+                    CategoryID = table.Column<int>(type: "int", nullable: true),
+                    FacilityManagerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Facilities", x => x.FacilityID);
                     table.ForeignKey(
+                        name: "FK_Facilities_AspNetUsers_FacilityManagerId",
+                        column: x => x.FacilityManagerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Facilities_Categories_CategoryID",
                         column: x => x.CategoryID,
                         principalTable: "Categories",
-                        principalColumn: "CategoryID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Facilities_FacilityManagers_FacilityManagerId",
-                        column: x => x.FacilityManagerId,
-                        principalTable: "FacilityManagers",
-                        principalColumn: "FacilityManagerId");
+                        principalColumn: "CategoryID");
                 });
 
             migrationBuilder.CreateTable(
@@ -402,11 +382,6 @@ namespace GuitarShop.Migrations
                 column: "FacilityManagerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FacilityManagers_IdentityUserId",
-                table: "FacilityManagers",
-                column: "IdentityUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserID",
                 table: "Orders",
                 column: "UserID");
@@ -456,13 +431,10 @@ namespace GuitarShop.Migrations
                 name: "Facilities");
 
             migrationBuilder.DropTable(
-                name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "FacilityManagers");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
         }
     }
 }

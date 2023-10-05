@@ -29,7 +29,7 @@ namespace GuitarShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update(int id)
+        public IActionResult Update(string id)
         {
             ViewBag.Action = "Update";
             var category = _repo.Category.GetById(id);
@@ -62,7 +62,7 @@ namespace GuitarShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             Category category = _repo.Category.GetById(id);
             return View(category);

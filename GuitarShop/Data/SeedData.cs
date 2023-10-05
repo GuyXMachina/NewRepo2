@@ -32,7 +32,7 @@ namespace GuitarShop.Data
                 context.Facilities.AddRange(
                     new Facility
                     {
-                        CategoryID = context.Categories.First(c => c.CategoryName == "Gym").CategoryID,
+                        CategoryName = "Gym",
                         Code = "Gym_QQ",
                         Name = "Main Gym",
                         Price = (decimal)10.00,
@@ -40,7 +40,7 @@ namespace GuitarShop.Data
                     },
                     new Facility
                     {
-                        CategoryID = context.Categories.First(c => c.CategoryName == "Laundry Service").CategoryID,
+                        CategoryName = "Laundry Service",
                         Code = "laundry_QQ",
                         Name = "Laundry Room 1",
                         Price = (decimal)5.00,
@@ -48,7 +48,7 @@ namespace GuitarShop.Data
                     },
                     new Facility
                     {
-                        CategoryID = context.Categories.First(c => c.CategoryName == "Parking Service").CategoryID,
+                        CategoryName = "Parking Service",
                         Code = "Parking_QQ",
                         Name = "Parking Lot A",
                         Price = (decimal)3.00,
@@ -56,7 +56,7 @@ namespace GuitarShop.Data
                     },
                     new Facility
                     {
-                        CategoryID = context.Categories.First(c => c.CategoryName == "Library Discussion Room").CategoryID,
+                        CategoryName = "Library Discussion Room",
                         Code = "library_QQ",
                         Name = "Library Discussion Room 1",
                         Price = (decimal)0.00,
@@ -86,17 +86,64 @@ namespace GuitarShop.Data
                 }
             }
 
-            var user = new User
+            // Admin user
+            var adminUser = new User
             {
                 UserName = "FacilityAdmin",
                 Email = "Admin@example.com",
-                UserType = UserType.Staff 
+                UserType = UserType.Staff, 
+                Id = "The User admin"
             };
-            var result = await userManager.CreateAsync(user, "Password123!");
+            var adminResult = await userManager.CreateAsync(adminUser, "Password123!");
 
-            if (result.Succeeded)
+            if (adminResult.Succeeded)
             {
-                await userManager.AddToRoleAsync(user, "FacilityAdmin");
+                await userManager.AddToRoleAsync(adminUser, "FacilityAdmin");
+            }
+
+            // Manager user
+            var managerUser = new User
+            {
+                UserName = "FacilityManager",
+                Email = "Manager@example.com",
+                UserType = UserType.Staff,
+                Id = "The User manager"
+            };
+            var managerResult = await userManager.CreateAsync(managerUser, "Password123!");
+
+            if (managerResult.Succeeded)
+            {
+                await userManager.AddToRoleAsync(managerUser, "FacilityManager");
+            }
+
+            // In-charge user
+            var inChargeUser = new User
+            {
+                UserName = "FacilityInCharge",
+                Email = "InCharge@example.com",
+                UserType = UserType.Staff,
+                Id = "The User in charge"
+            };
+            var inChargeResult = await userManager.CreateAsync(inChargeUser, "Password123!");
+
+            if (inChargeResult.Succeeded)
+            {
+                await userManager.AddToRoleAsync(inChargeUser, "FacilityInCharge");
+            }
+
+            // Regular user
+            var regularUser = new User
+            {
+                UserName = "RegularUser",
+                Email = "User@example.com",
+                UserType = UserType.Student,
+                Id = "The User"
+            };
+            var userResult = await userManager.CreateAsync(regularUser, "Password123!");
+
+            if (userResult.Succeeded)
+            {
+                await userManager.AddToRoleAsync(regularUser, "User");
             }
         }
 

@@ -96,16 +96,15 @@ namespace GuitarShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Check if IdentityUserId exists in the User table
-                if (!string.IsNullOrEmpty(model.IdentityUserId))
+                var newManager = new FacilityManager
                 {
-                    var userExists = _repoWrapper.User.FindByCondition(u => u.Id == model.IdentityUserId).Any();
-                    if (!userExists)
-                    {
-                        ModelState.AddModelError("IdentityUserId", "The specified Identity User ID does not exist.");
-                        return View(model);
-                    }
-                }
+                    Name = model.Name,
+                    Surname = model.Surname,
+                    Email = model.Email,
+                    UserType = UserType.Staff,
+                    EmployeeID = model.Email,
+                    Id = $"{model.Email.Trim()} {model.Name.Trim()}{model.Surname.Trim()}"
+                };
 
                 _repoWrapper.FacilityManager.Create(model);
                 _repoWrapper.Save();
@@ -116,7 +115,7 @@ namespace GuitarShop.Controllers
 
 
         [HttpGet]
-        public IActionResult UpdateFacilityManager(int id)
+        public IActionResult UpdateFacilityManager(string id)
         {
             var manager = _repoWrapper.FacilityManager.GetById(id);
             if (manager == null)
@@ -139,7 +138,7 @@ namespace GuitarShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult DeleteFacilityManager(int id)
+        public IActionResult DeleteFacilityManager(string id)
         {
             var manager = _repoWrapper.FacilityManager.GetById(id);
             if (manager == null)
@@ -156,7 +155,7 @@ namespace GuitarShop.Controllers
             {
                 _repoWrapper.FacilityManager.Delete(manager);
                 _repoWrapper.Save();
-                TempData["Message"] = $"{manager.FirstName} {manager.LastName} has been deleted";
+                TempData["Message"] = $"{manager.Name} {manager.Surname} has been deleted";
             }
             return RedirectToAction("FacilityManagers");
         }
