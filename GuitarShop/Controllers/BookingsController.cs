@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GuitarShop.Data;
 using GuitarShop.Models;
 
-namespace GuitarShop
+namespace GuitarShop.Controllers
 {
     public class BookingsController : Controller
     {
@@ -69,12 +69,20 @@ namespace GuitarShop
             {
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
+                //Transaction transaction = new Transaction
+                //{
+                //    BookingID = booking.BookingID,
+                //    Amount = booking.Facility.DiscountPrice, // Implement this function to calculate the amount
+                //    TransactionDate = DateTime.Now,
+                //    PaymentMethod = "Credit Card" // Set this based on your payment method
+                //};
+                ViewData["FacilityID"] = new SelectList(_context.Facilities, "FacilityID", "Code", booking.FacilityID);
+                ViewData["FacilityInChargeId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityInChargeId);
+                ViewData["FacilityManagerId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityManagerId);
+                ViewData["UserID"] = new SelectList(_context.UserS, "Id", "Id", booking.UserID);
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FacilityID"] = new SelectList(_context.Facilities, "FacilityID", "Code", booking.FacilityID);
-            ViewData["FacilityInChargeId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityInChargeId);
-            ViewData["FacilityManagerId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityManagerId);
-            ViewData["UserID"] = new SelectList(_context.UserS, "Id", "Id", booking.UserID);
             return View(booking);
         }
 
@@ -92,9 +100,9 @@ namespace GuitarShop
                 return NotFound();
             }
             ViewData["FacilityID"] = new SelectList(_context.Facilities, "FacilityID", "Code", booking.FacilityID);
-            ViewData["FacilityInChargeId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityInChargeId);
-            ViewData["FacilityManagerId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityManagerId);
-            ViewData["UserID"] = new SelectList(_context.UserS, "Id", "Id", booking.UserID);
+            ViewData["FacilityInChargeId"] = new SelectList(_context.UserS, "Id", "UserName", booking.FacilityInChargeId);
+            ViewData["FacilityManagerId"] = new SelectList(_context.UserS, "Id", "UserName", booking.FacilityManagerId);
+            ViewData["UserID"] = new SelectList(_context.UserS, "Id", "UserName", booking.UserID);
             return View(booking);
         }
 
@@ -173,14 +181,14 @@ namespace GuitarShop
             {
                 _context.Bookings.Remove(booking);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool BookingExists(int id)
         {
-          return _context.Bookings.Any(e => e.BookingID == id);
+            return _context.Bookings.Any(e => e.BookingID == id);
         }
     }
 }

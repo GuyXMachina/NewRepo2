@@ -31,7 +31,7 @@ namespace GuitarShop.Models
         public PricingType PricingType { get; set; }
 
         public decimal? DiscountPercent { get; set; }
-        public decimal DiscountAmount => (DiscountPercent ?? 0) * Price;
+        public decimal DiscountAmount => Math.Min(Price, (DiscountPercent ?? 0) * Price / 100);
         public decimal DiscountPrice => Price - DiscountAmount;
 
         [Required(ErrorMessage = "Please select a category.")]

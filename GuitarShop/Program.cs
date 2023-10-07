@@ -2,8 +2,10 @@ using GuitarShop.Data;
 using GuitarShop.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
+var Configuration = builder.Configuration;
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
@@ -14,9 +16,8 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//Database Option 2: SQLite 
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+
 
 builder.Services.AddRouting(options =>
 {
@@ -28,6 +29,7 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 app.UseRouting();
+StripeConfiguration.ApiKey = Configuration.GetSection("Stripe:SecretKey").Get<string>();
 app.UseAuthentication();
 app.UseAuthorization();
 

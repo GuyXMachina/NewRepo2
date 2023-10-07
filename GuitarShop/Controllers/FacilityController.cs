@@ -4,18 +4,23 @@ using GuitarShop.Models;
 using GuitarShop.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using Stripe.Checkout;
 using System.Globalization;
 using System.Linq.Expressions;
+using static System.Net.WebRequestMethods;
 
 namespace GuitarShop.Controllers
 {
     public class FacilityController : Controller
     {
         private readonly IRepositoryWrapper _repo;
+        private readonly AppDbContext _context;
 
-        public FacilityController(IRepositoryWrapper repo)
+        public FacilityController(IRepositoryWrapper repo, AppDbContext context)
         {
             _repo = repo;
+            _context = context;
         }
         public int iPageSize = 4;
         public IActionResult List(string id = "all", string sortBy = "name", int Page = 1)
@@ -88,10 +93,63 @@ namespace GuitarShop.Controllers
                     TotalItems = iTotalProducts
                 }
             };
+            
+           return View(model);
+        }
+        public IActionResult CheckOut(int id)
+        {
+            // Retrieve facilities from your database; replace with actual logic
+            var facility = _repo.Facility.GetById(id); // Replace with your actual data retrieval logic
 
-            return View(model);
+            if (facility == null)
+            {
+                return NotFound();
+            }
+
+            string scheme = HttpContext.Request.Scheme;
+            string host = HttpContext.Request.Host.Value;
+
+            var domain = $"{scheme}://{host}";
+            var lineItems = new List<SessionLineItemOptions>();
+
+            var options = new SessionCreateOptions
+            {
+                SuccessUrl = domain+"/Facility/Success",
+                CancelUrl = domain+"/Facility/Cancel",
+                LineItems = new List<SessionLineItemOptions>
+        {
+            new SessionLineItemOptions
+            {
+                PriceData = new SessionLineItemPriceDataOptions
+                {
+                    UnitAmount = Convert.ToInt64(facility.DiscountPrice * 100),
+                    Currency = "zar",
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = facility.Name,
+                    },
+                },
+                Quantity = 1,
+            },
+        },
+                Mode = "payment",
+            };
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+        public IActionResult Success()
+        {
+            return View();
         }
 
+        public IActionResult Cancel()
+        {
+            return View();
+        }
         public IActionResult Details(int id)
         {
             Facility product = _repo.Facility.GetById(id);

@@ -24,9 +24,7 @@ namespace GuitarShop.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);  // Important: this must be at the top
-
-            // Custom configurations for your entities
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Category>().ToTable("Category");
             modelBuilder.Entity<FacilityManager>().ToTable("FacilityManager");
             modelBuilder.Entity<Booking>().ToTable("Booking");
@@ -43,7 +41,7 @@ namespace GuitarShop.Data
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
-            // Add any other configurations, indexes, constraints, etc. here
+         
         }
 
     }

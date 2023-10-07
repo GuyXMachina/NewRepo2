@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GuitarShop.Data;
 using GuitarShop.Models;
 
-namespace GuitarShop
+namespace GuitarShop.Controllers
 {
     public class TransactionsController : Controller
     {
@@ -155,14 +155,14 @@ namespace GuitarShop
             {
                 _context.Transactions.Remove(transaction);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TransactionExists(int id)
         {
-          return _context.Transactions.Any(e => e.TransactionID == id);
+            return _context.Transactions.Any(e => e.TransactionID == id);
         }
     }
 }

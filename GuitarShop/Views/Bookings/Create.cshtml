@@ -2,9 +2,11 @@
 
 @{
     ViewData["Title"] = "Create";
+    bool isAdmin = User.IsInRole("FacilityAdmin");
+    bool isManager = User.IsInRole("FacilityManager");
 }
 
-<h1>Create</h1>
+<h1>Book a Facility</h1>
 
 <h4>Booking</h4>
 <hr />
@@ -12,10 +14,13 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FacilityID" class="control-label"></label>
-                <select asp-for="FacilityID" class ="form-control" asp-items="ViewBag.FacilityID"></select>
-            </div>
+            @if (isAdmin)
+            {
+                <div class="form-group">
+                    <label asp-for="FacilityID" class="control-label"></label>
+                    <select asp-for="FacilityID" class="form-control" asp-items="ViewBag.FacilityID"></select>
+                </div>
+            }
             <div class="form-group">
                 <label asp-for="UserID" class="control-label"></label>
                 <select asp-for="UserID" class ="form-control" asp-items="ViewBag.UserID"></select>
@@ -30,19 +35,24 @@
                 <input asp-for="EndTime" class="form-control" />
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FacilityManagerId" class="control-label"></label>
-                <select asp-for="FacilityManagerId" class ="form-control" asp-items="ViewBag.FacilityManagerId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="FacilityInChargeId" class="control-label"></label>
-                <select asp-for="FacilityInChargeId" class ="form-control" asp-items="ViewBag.FacilityInChargeId"></select>
-            </div>
+            
+            @if(isAdmin || isManager)
+            {
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label"></label>
+                    <input asp-for="Status" class="form-control" />
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FacilityManagerId" class="control-label"></label>
+                    <select asp-for="FacilityManagerId" class="form-control" asp-items="ViewBag.FacilityManagerId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FacilityInChargeId" class="control-label"></label>
+                    <select asp-for="FacilityInChargeId" class="form-control" asp-items="ViewBag.FacilityInChargeId"></select>
+                </div>
+            }
+            
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -31,10 +31,11 @@
                         <div class="card-body">
                             <h5 class="card-title">@facility.Name</h5>
                             <p class="card-text">Price: @facility.Price (@facility.PricingType)</p>
-                            <p class="card-text">Discount: @facility.DiscountAmount</p>
+                            <p class="card-text">Discount: @(facility.DiscountPercent ?? 0)%</p>
                             <p class="card-text">Capacity: @facility.Capacity</p>
                             <p class="card-text">Location: @facility.Location</p>
                             <a href="@Url.Action("Details", new { id = facility.FacilityID })" class="btn btn-primary">View Details</a>
+                            <a asp-action="CheckOut" asp-route-id="@facility.FacilityID">Book Facility</a>
                         </div>
                     </div>
                 </div>
