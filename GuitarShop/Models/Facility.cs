@@ -42,17 +42,6 @@ namespace GuitarShop.Models
         public int Capacity { get; set; }
         public string AvailabilityTimes { get; set; }
 
-        public string Slug
-        {
-            get
-            {
-                if (Name == null)
-                    return "";
-                else
-                    return Name.Replace(' ', '-');
-            }
-        }
-
         // Navigation properties
         public Category Category { get; set; }
         public ICollection<Booking> Bookings { get; set; }

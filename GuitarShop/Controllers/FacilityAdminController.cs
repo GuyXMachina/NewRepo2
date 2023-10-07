@@ -3,6 +3,7 @@ using GuitarShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -14,11 +15,13 @@ namespace GuitarShop.Controllers
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly AppDbContext _context;
 
-        public FacilityAdminController(IRepositoryWrapper repoWrapper, UserManager<User> userManager)
+        public FacilityAdminController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, AppDbContext appDbContext)
         {
             _repoWrapper = repoWrapper;
             _userManager = userManager;
+            _context = appDbContext;
         }
 
         public IActionResult Facilities()
@@ -30,7 +33,9 @@ namespace GuitarShop.Controllers
         [HttpGet]
         public IActionResult CreateFacility()
         {
-            return View();
+            var facility = new Facility();
+            ViewBag.Categories = new SelectList(_context.Categories, "CategoryID", "CategoryName", facility.CategoryID);
+            return View(facility);
         }
 
         [HttpPost]
@@ -38,8 +43,8 @@ namespace GuitarShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repoWrapper.Facility.Create(model);
-                _repoWrapper.Save();
+                _context.Facilities.Add(model);
+                _context.SaveChanges();
                 return RedirectToAction("Facilities");
             }
             return View(model);
@@ -49,6 +54,7 @@ namespace GuitarShop.Controllers
         public IActionResult UpdateFacility(int id)
         {
             var facility = _repoWrapper.Facility.GetById(id);
+            ViewBag.Categories = new SelectList(_context.Categories, "CategoryID", "CategoryName", facility.CategoryID);
             return View(facility);
         }
 
@@ -57,9 +63,28 @@ namespace GuitarShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repoWrapper.Facility.Update(model);
-                _repoWrapper.Save();
-                return RedirectToAction("Facilities");
+                try
+                {
+                    Console.WriteLine($"Updating facility with ID: {model.FacilityID}, CategoryID: {model.CategoryID}");
+                    if (model.CategoryID <= 0)
+                    {
+                        Console.WriteLine("Invalid CategoryID");
+                        ModelState.AddModelError("CategoryID", "Invalid CategoryID");
+                        return View(model);
+                    }
+
+                    _context.Facilities.Update(model);
+                    _context.SaveChanges();
+                    return RedirectToAction("Facilities");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred while updating the facility: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Model state is not valid.");
             }
             return View(model);
         }
@@ -74,14 +99,21 @@ namespace GuitarShop.Controllers
         [HttpPost]
         public IActionResult DeleteFacilityConfirmed(int id)
         {
-            var facility = _repoWrapper.Facility.GetById(id);
-            if (facility != null)
+            Console.WriteLine($"Received ID: {id}");  // Debugging line
+            var facility = _context.Facilities.Find(id);
+            if (facility == null)
             {
-                _repoWrapper.Facility.Delete(facility);
-                _repoWrapper.Save();
+                TempData["ErrorMessage"] = "Facility not found";
+                return RedirectToAction("Facilities");
             }
+            _context.Facilities.Remove(facility);
+            _context.SaveChanges();
             return RedirectToAction("Facilities");
         }
+
+
+
+
         [HttpGet]
         public async Task<IActionResult> FacilityManagers()
         {
@@ -163,18 +195,34 @@ namespace GuitarShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateFacilityManager(FacilityManager model)
+        public async Task<IActionResult> UpdateFacilityManager(User model)
         {
             if (ModelState.IsValid)
             {
-                var result = await _userManager.UpdateAsync(model);
-                if (result.Succeeded)
+                var existingUser = await _userManager.FindByIdAsync(model.Id);
+      
+                if (existingUser != null)
                 {
-                    return RedirectToAction("FacilityManagers");
+                    // Update only the fields you want to change
+                    existingUser.Name = model.Name;
+                    existingUser.Surname = model.Surname;
+                    existingUser.Password = model.Password;
+                    existingUser.Email = model.Email;
+                    // ... any other fields you want to update
+
+                    var result = await _userManager.UpdateAsync(existingUser);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("FacilityManagers");
+                    }
+                    else
+                    {
+                        AddErrorsFromResult(result);
+                    }
                 }
                 else
                 {
-                    AddErrorsFromResult(result);
+                    return NotFound();
                 }
             }
             return View(model);
@@ -186,28 +234,35 @@ namespace GuitarShop.Controllers
             var manager = await _userManager.FindByIdAsync(id);
             if (manager == null)
             {
-                return NotFound();
+                return NotFound("Facility Manager not found.");
             }
             return View(manager);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeleteFacilityManagerConfirmed(FacilityManager manager)
+        [HttpPost, ActionName("DeleteFacilityManager")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteFacilityManagerConfirmed(string id)
         {
-            if (manager != null)
+            var manager = await _userManager.FindByIdAsync(id);
+            if (manager == null)
             {
-                var result = await _userManager.DeleteAsync(manager);
-                if (result.Succeeded)
-                {
-                    TempData["Message"] = $"{manager.Name} {manager.Surname} has been deleted";
-                    return RedirectToAction("FacilityManagers");
-                }
-                else
-                {
-                    AddErrorsFromResult(result);
-                }
+                return NotFound("Facility Manager not found.");
             }
-            return View("FacilityManagers");
+            var result = await _userManager.DeleteAsync(manager);
+            if (result.Succeeded)
+            {
+                TempData["Message"] = "Facility Manager has been deleted.";
+                return RedirectToAction("FacilityManagers");
+            }
+            else
+            {
+                // If the operation failed, you can log the errors here
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View("DeleteFacilityManager", manager);  // Show the view again with the errors
+            }
         }
 
         private void AddErrorsFromResult(IdentityResult result)

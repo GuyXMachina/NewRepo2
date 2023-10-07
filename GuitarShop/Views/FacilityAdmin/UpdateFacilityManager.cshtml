@@ -1,10 +1,10 @@
-﻿@model FacilityManager
+﻿@model User
 
 <h2>Update Facility Manager</h2>
 
 <form asp-action="UpdateFacilityManager" asp-controller="FacilityAdmin" method="post">
     <!-- Hidden field for the ID -->
-    <input type="hidden" asp-for="EmployeeID" />
+    <input type="hidden" asp-for="Id" />
 
     <div class="form-group">
         <label asp-for="Name">First Name</label>
@@ -17,8 +17,16 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="EmployeeID">User ID</label>
+        <label asp-for="EmployeeID">Employee ID</label>
         <input asp-for="EmployeeID" class="form-control" />
+    </div>
+    <div class="mb-4">
+        <label asp-for="Email" class="block text-sm font-medium text-gray-600">Email</label>
+        <input asp-for="Email" class="mt-1 p-2 w-full border rounded-md" />
+    </div>
+    <div class="mb-4">
+        <label asp-for="Password" class="block text-sm font-medium text-gray-600">Password</label>
+        <input asp-for="Password" class="mt-1 p-2 w-full border rounded-md" />
     </div>
 
     <!-- Add other fields as needed -->

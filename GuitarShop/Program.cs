@@ -38,8 +38,8 @@ app.MapControllerRoute(
 
 // route for paging all products
 app.MapControllerRoute(
-    name: "allpaging",
-    pattern: "{controller}/{action}/{id=all}/page{productPage}");
+name: "allpaging",
+pattern: "{controller}/{action}/{id=all}/page{productPage}");
 
 // route for sorting
 app.MapControllerRoute(
