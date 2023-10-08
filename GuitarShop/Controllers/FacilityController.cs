@@ -8,7 +8,6 @@ using Stripe;
 using Stripe.Checkout;
 using System.Globalization;
 using System.Linq.Expressions;
-using static System.Net.WebRequestMethods;
 
 namespace GuitarShop.Controllers
 {
@@ -147,21 +146,25 @@ namespace GuitarShop.Controllers
 
             try
             {
-                var bookingId = TempData["BookingID"];
-                var booking = await _context.Bookings.FindAsync(bookingId);
-                if (booking != null)
+                if (TempData["BookingID"] != null)
                 {
-                    booking.Transaction = new Transaction 
-                    {
-                        TransactionDate = DateTime.Now,
-                        PaymentMethod = "Credit Card"
-                    };
-                    booking.Status = "Paid";
-                    _context.Bookings.Update(booking);
-                    await _context.SaveChangesAsync();
-                }
+                    var bookingId = (int)TempData["BookingID"];
+                    var booking = await _context.Bookings.FindAsync(bookingId);
 
-                return View();
+                    if (booking != null)
+                    {
+                        booking.Transaction = new Transaction
+                        {
+                            TransactionDate = DateTime.Now,
+                            PaymentMethod = "Credit Card"
+                        };
+
+                        booking.Status = "Paid";
+                        _context.Bookings.Update(booking);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                    return View();
             }
             catch (StripeException)
             {

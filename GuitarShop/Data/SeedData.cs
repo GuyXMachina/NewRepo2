@@ -35,7 +35,7 @@ namespace GuitarShop.Data
                         CategoryID = context.Categories.First(c => c.CategoryName == "Gym").CategoryID,
                         Code = "Gym_QQ",
                         Name = "Main Gym",
-                        Price = (decimal)10.00,
+                        Price = (decimal)100.00,
                         PricingType = PricingType.Monthly
                     },
                     new Facility
@@ -43,7 +43,7 @@ namespace GuitarShop.Data
                         CategoryID = context.Categories.First(c=> c.CategoryName == "Laundry Service").CategoryID,
                         Code = "laundry_QQ",
                         Name = "Laundry Room 1",
-                        Price = (decimal)5.00,
+                        Price = (decimal)95.00,
                         PricingType = PricingType.Weekly
                     },
                     new Facility
@@ -51,7 +51,7 @@ namespace GuitarShop.Data
                         CategoryID = context.Categories.First(c => c.CategoryName == "Parking Service").CategoryID,
                         Code = "Parking_QQ",
                         Name = "Parking Lot A",
-                        Price = (decimal)3.00,
+                        Price = (decimal)30.00,
                         PricingType = PricingType.Daily
                     },
                     new Facility

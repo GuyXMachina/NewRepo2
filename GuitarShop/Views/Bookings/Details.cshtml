@@ -57,14 +57,11 @@
     </dl>
 </div>
 <div>
-    @if(isAdmin || isManager)
+    @if (isAdmin || isManager)
     {
-        <a asp-action="Edit" asp-route-id="@Model?.BookingID" class="btn btn-primary">Edit</a>
+        <a asp-action="Edit" asp-route-id="@Model.FacilityID" class="btn btn-primary">Edit</a>
     }
-    else
-    {
-        <a asp-action="CheckOut" asp-controller="Facility" asp-route-id="@Model?.BookingID" class="btn btn-success">Pay Now</a>
-        <a asp-action="Index" class="btn btn-danger">Back to List</a>
-    }
+    <a asp-action="CheckOut" asp-controller="Facility" asp-route-id="@Model.FacilityID" class="btn btn-primary">Pay Now</a>
+    <a asp-action="CalendarBook" asp-controller="Bookings" class="btn btn-primary">Back to Bookings</a>
     
 </div>

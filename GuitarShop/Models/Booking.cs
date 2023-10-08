@@ -12,8 +12,6 @@ namespace GuitarShop.Models
         [Required]
         [ForeignKey("Facility")]
         public int FacilityID { get; set; }
-
-        [Required]
         [ForeignKey("User")]
         public string UserID { get; set; }  // Adjusted to string to match IdentityUser ID type
 
@@ -23,9 +21,8 @@ namespace GuitarShop.Models
         [Required]
         public DateTime EndTime { get; set; }
 
-        [Required]
         [MaxLength(20)]
-        public string Status { get; set; } // Consider using an enum
+        public string Status { get; set; } = "Pending Payment"; // Consider using an enum
 
         // Navigation properties
         public Transaction Transaction { get; set; }
