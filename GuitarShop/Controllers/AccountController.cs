@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using GuitarShop.Models;
 using GuitarShop.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
 
 namespace GuitarShop.Controllers
 {
@@ -48,6 +49,7 @@ namespace GuitarShop.Controllers
                       loginModel.Password, false, false);
                     if (result.Succeeded)
                     {
+                        TempData["success"] = "You have successfully logged in.";
                         // Redirect based on role
                         var roles = await _userManager.GetRolesAsync(user);
                         if (roles.Contains("FacilityAdmin"))
@@ -67,7 +69,7 @@ namespace GuitarShop.Controllers
                             return Redirect("/User/Profile");
                         }
                         // ... Add more roles as needed
-
+                        
                         return Redirect(loginModel?.ReturnUrl ?? "/Home/Index");
                     }
 
@@ -81,6 +83,7 @@ namespace GuitarShop.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
+            Console.WriteLine("Entering GET Register method");
             return View();
         }
 
@@ -88,9 +91,12 @@ namespace GuitarShop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterModel registerModel)
         {
+            Console.WriteLine("Entering POST Register method");
+
             if (ModelState.IsValid)
             {
-                // Create roles if not exist
+                Console.WriteLine("Model state is valid.");
+
                 var roles = new List<string> { "FacilityAdmin", "FacilityManager", "FacilityInCharge", "User" };
                 foreach (var role in roles)
                 {
@@ -110,17 +116,28 @@ namespace GuitarShop.Controllers
 
                 if (result.Succeeded)
                 {
-                    // Assign role logic here. For now, adding to "User" role.
+                    Console.WriteLine("User creation succeeded.");
+                    TempData["success"] = "You have successfully created an Account.";  // Added success TempData
                     await _userManager.AddToRoleAsync(user, "User");
                     return RedirectToAction("Login", "Account");
                 }
                 else
                 {
+                    Console.WriteLine("User creation failed.");
                     ModelState.AddModelError("", "Unable to register new user");
+                    TempData["warning"] = "Failed to create an Account.";  // Added warning TempData
                 }
             }
+            else
+            {
+                Console.WriteLine("Model state is invalid.");
+                TempData["warning"] = "Invalid data entered.";  // Added warning TempData
+            }
+
             return View(registerModel);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Logout()

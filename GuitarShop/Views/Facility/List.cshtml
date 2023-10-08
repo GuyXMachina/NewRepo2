@@ -35,7 +35,7 @@
                             <p class="card-text">Capacity: @facility.Capacity</p>
                             <p class="card-text">Location: @facility.Location</p>
                             <a href="@Url.Action("Details", new { id = facility.FacilityID })" class="btn btn-primary">View Details</a>
-                            <a asp-action="CalendarBook" asp-controller="Bookings" asp-route-id="@facility.FacilityID">Book Facility</a>
+                            <a asp-action="CalendarBook" asp-controller="Bookings" asp-route-id="@facility.FacilityID" class="btn btn-primary">Book Facility</a>
                         </div>
                     </div>
                 </div>

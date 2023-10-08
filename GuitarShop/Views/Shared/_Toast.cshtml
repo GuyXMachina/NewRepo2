@@ -1,0 +1,33 @@
+﻿@if (TempData["success"] != null)
+{
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "positionClass": "toast-top-left"
+        };
+        toastr.success('@TempData["success"]')  
+    </script>
+}
+@if (TempData["info"] != null)
+{
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "positionClass": "toast-top-left"
+        };
+        toastr.info('@TempData["info"]')
+    </script>
+}
+@if (TempData["warning"] != null)
+{
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "positionClass": "toast-top-left"
+        };
+        toastr.error('@TempData["warning"]')
+    </script>
+}

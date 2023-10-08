@@ -29,16 +29,15 @@ namespace GuitarShop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CalendarBook()
+        public IActionResult CalendarBook()
         {
-            var bookings = await _context.Bookings.Select(b => new 
+            var bookings = _context.Bookings.Select(b => new 
             {
-                id = b.BookingID,
                 title = b.Facility.Name,
                 start = b.StartTime,
                 end = b.EndTime,
-                url = Url.Action("CalendarBook", "Bookings")
-            }).ToListAsync();
+                url = Url.Action("Details", "Bookings", new { id = b.BookingID})
+            }).ToList();
             ViewData["Bookings"] = JsonConvert.SerializeObject(bookings);
             return View(bookings);
         }
@@ -87,6 +86,7 @@ namespace GuitarShop.Controllers
             {
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Booking successfully created.";
                 //Transaction transaction = new Transaction
                 //{
                 //    BookingID = booking.BookingID,
@@ -101,6 +101,7 @@ namespace GuitarShop.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            TempData["warning"] = "Failed to create booking.";
             return View(booking);
         }
 
@@ -133,6 +134,7 @@ namespace GuitarShop.Controllers
         {
             if (id != booking.BookingID)
             {
+                TempData["success"] = "Booking successfully updated.";
                 return NotFound();
             }
 
@@ -142,11 +144,13 @@ namespace GuitarShop.Controllers
                 {
                     _context.Update(booking);
                     await _context.SaveChangesAsync();
+                    TempData["success"] = "Booking successfully updated.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!BookingExists(booking.BookingID))
                     {
+                        TempData["warning"] = "Booking not found.";
                         return NotFound();
                     }
                     else
@@ -160,6 +164,8 @@ namespace GuitarShop.Controllers
             ViewData["FacilityInChargeId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityInChargeId);
             ViewData["FacilityManagerId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityManagerId);
             ViewData["UserID"] = new SelectList(_context.UserS, "Id", "Id", booking.UserID);
+
+            TempData["warning"] = "Failed to update booking.";
             return View(booking);
         }
 

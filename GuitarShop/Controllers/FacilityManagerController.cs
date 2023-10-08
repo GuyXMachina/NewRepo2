@@ -34,12 +34,14 @@ namespace GuitarShop.Controllers
         {
             if (!ModelState.IsValid)
             {
+                TempData["warning"] = "Please correct the form errors.";
                 return View(model);
             }
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
+                TempData["warning"] = "User not found.";
                 return RedirectToAction("Login");
             }
 
@@ -47,6 +49,7 @@ namespace GuitarShop.Controllers
 
             if (!changePasswordResult.Succeeded)
             {
+                TempData["info"] = "Password change failed. See below for details.";
                 foreach (var error in changePasswordResult.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -54,8 +57,10 @@ namespace GuitarShop.Controllers
                 return View();
             }
 
+            TempData["success"] = "Password Changed Successfully";
             await _signInManager.RefreshSignInAsync(user);
             return RedirectToAction("Profile");
         }
+
     }
 }

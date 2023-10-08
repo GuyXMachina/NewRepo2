@@ -96,13 +96,11 @@ namespace GuitarShop.Controllers
             
            return View(model);
         }
-      
+
 
         public IActionResult CheckOut(int id)
         {
-            // Retrieve facilities from your database; replace with actual logic
-            var facility = _repo.Facility.GetById(id); // Replace with your actual data retrieval logic
-
+            var facility = _repo.Facility.GetById(id);
             if (facility == null)
             {
                 return NotFound();
@@ -110,14 +108,12 @@ namespace GuitarShop.Controllers
 
             string scheme = HttpContext.Request.Scheme;
             string host = HttpContext.Request.Host.Value;
-
             var domain = $"{scheme}://{host}";
-            var lineItems = new List<SessionLineItemOptions>();
 
             var options = new SessionCreateOptions
             {
-                SuccessUrl = domain+"/Facility/Success",
-                CancelUrl = domain+"/Facility/Cancel",
+                SuccessUrl = domain + "/Facility/Success",
+                CancelUrl = domain + "/Facility/Cancel",
                 LineItems = new List<SessionLineItemOptions>
         {
             new SessionLineItemOptions
@@ -132,20 +128,46 @@ namespace GuitarShop.Controllers
                     },
                 },
                 Quantity = 1,
-            },
+            }
         },
-                Mode = "payment",
+                Mode = "payment"
             };
 
             var service = new SessionService();
             Session session = service.Create(options);
-
             Response.Headers.Add("Location", session.Url);
+            TempData["BookingID"] = id;
+           
             return new StatusCodeResult(303);
         }
-        public IActionResult Success()
+
+        
+        public async Task<IActionResult> Success()
         {
-            return View();
+
+            try
+            {
+                var bookingId = TempData["BookingID"];
+                var booking = await _context.Bookings.FindAsync(bookingId);
+                if (booking != null)
+                {
+                    booking.Transaction = new Transaction 
+                    {
+                        TransactionDate = DateTime.Now,
+                        PaymentMethod = "Credit Card"
+                    };
+                    booking.Status = "Paid";
+                    _context.Bookings.Update(booking);
+                    await _context.SaveChangesAsync();
+                }
+
+                return View();
+            }
+            catch (StripeException)
+            {
+                // Invalid payload or signature. Return 400 Bad Request
+                return BadRequest();
+            }
         }
 
         public IActionResult Cancel()

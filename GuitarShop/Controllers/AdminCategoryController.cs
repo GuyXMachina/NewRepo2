@@ -44,12 +44,12 @@ namespace GuitarShop.Controllers
                 if (category.CategoryID == 0)
                 {
                     _repo.Category.Create(category);
-                    TempData["Message"] = $"{category.CategoryName} has been added";
+                    TempData["success"] = $"{category.CategoryName} has been added";
                 }
                 else
                 {
                     _repo.Category.Update(category);
-                    TempData["Message"] = $"{category.CategoryName} has been updated";
+                    TempData["info"] = $"{category.CategoryName} has been updated";
                 }
                 _repo.Save();
                 return RedirectToAction("List");
@@ -73,7 +73,7 @@ namespace GuitarShop.Controllers
         public IActionResult Delete(Category category)
         {
             _repo.Category.Delete(category);
-            TempData["Message"] = $"{category.CategoryName} has been deleted";
+            TempData["info"] = $"{category.CategoryName} has been deleted";
             _repo.Save();
             return RedirectToAction("List");
         }

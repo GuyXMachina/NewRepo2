@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Details";
+    bool isAdmin = User.IsInRole("FacilityAdmin");
+    bool isManager = User.IsInRole("FacilityManager");
 }
 
 <h1>Details</h1>
@@ -55,6 +57,14 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.BookingID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if(isAdmin || isManager)
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.BookingID" class="btn btn-primary">Edit</a>
+    }
+    else
+    {
+        <a asp-action="CheckOut" asp-controller="Facility" asp-route-id="@Model?.BookingID" class="btn btn-success">Pay Now</a>
+        <a asp-action="Index" class="btn btn-danger">Back to List</a>
+    }
+    
 </div>

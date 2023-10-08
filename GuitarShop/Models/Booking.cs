@@ -28,6 +28,7 @@ namespace GuitarShop.Models
         public string Status { get; set; } // Consider using an enum
 
         // Navigation properties
+        public Transaction Transaction { get; set; }
         public Facility Facility { get; set; }
 
         public string FacilityManagerId { get; set; }
