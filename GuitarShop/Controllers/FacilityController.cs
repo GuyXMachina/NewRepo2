@@ -96,6 +96,8 @@ namespace GuitarShop.Controllers
             
            return View(model);
         }
+      
+
         public IActionResult CheckOut(int id)
         {
             // Retrieve facilities from your database; replace with actual logic

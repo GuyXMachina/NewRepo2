@@ -14,7 +14,7 @@ namespace GuitarShop.Controllers
     {
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        //private readonly SignInManager<User> _signInManager;
         private readonly AppDbContext _context;
 
         public FacilityAdminController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, AppDbContext appDbContext)
@@ -29,87 +29,91 @@ namespace GuitarShop.Controllers
             var facilities = _repoWrapper.Facility.FindAll();
             return View(facilities);
         }
-
-        [HttpGet]
-        public IActionResult CreateFacility()
+        public IActionResult ListUsers()
         {
-            var facility = new Facility();
-            ViewBag.Categories = new SelectList(_context.Categories, "CategoryID", "CategoryName", facility.CategoryID);
-            return View(facility);
+            return View(_context.Users.ToList<User>());
         }
 
-        [HttpPost]
-        public IActionResult CreateFacility(Facility model)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Facilities.Add(model);
-                _context.SaveChanges();
-                return RedirectToAction("Facilities");
-            }
-            return View(model);
-        }
+        //[HttpGet]
+        //public IActionResult CreateFacility()
+        //{
+        //    var facility = new Facility();
+        //    ViewBag.Categories = new SelectList(_context.Categories, "CategoryID", "CategoryName", facility.CategoryID);
+        //    return View(facility);
+        //}
 
-        [HttpGet]
-        public IActionResult UpdateFacility(int id)
-        {
-            var facility = _repoWrapper.Facility.GetById(id);
-            ViewBag.Categories = new SelectList(_context.Categories, "CategoryID", "CategoryName", facility.CategoryID);
-            return View(facility);
-        }
+        //[HttpPost]
+        //public IActionResult CreateFacility(Facility model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Facilities.Add(model);
+        //        _context.SaveChanges();
+        //        return RedirectToAction("Facilities");
+        //    }
+        //    return View(model);
+        //}
 
-        [HttpPost]
-        public IActionResult UpdateFacility(Facility model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    Console.WriteLine($"Updating facility with ID: {model.FacilityID}, CategoryID: {model.CategoryID}");
-                    if (model.CategoryID <= 0)
-                    {
-                        Console.WriteLine("Invalid CategoryID");
-                        ModelState.AddModelError("CategoryID", "Invalid CategoryID");
-                        return View(model);
-                    }
+        //[HttpGet]
+        //public IActionResult UpdateFacility(int id)
+        //{
+        //    var facility = _repoWrapper.Facility.GetById(id);
+        //    ViewBag.Categories = new SelectList(_context.Categories, "CategoryID", "CategoryName", facility.CategoryID);
+        //    return View(facility);
+        //}
 
-                    _context.Facilities.Update(model);
-                    _context.SaveChanges();
-                    return RedirectToAction("Facilities");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred while updating the facility: {ex.Message}");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Model state is not valid.");
-            }
-            return View(model);
-        }
+        //[HttpPost]
+        //public IActionResult UpdateFacility(Facility model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            Console.WriteLine($"Updating facility with ID: {model.FacilityID}, CategoryID: {model.CategoryID}");
+        //            if (model.CategoryID <= 0)
+        //            {
+        //                Console.WriteLine("Invalid CategoryID");
+        //                ModelState.AddModelError("CategoryID", "Invalid CategoryID");
+        //                return View(model);
+        //            }
 
-        [HttpGet]
-        public IActionResult DeleteFacility(int id)
-        {
-            var facility = _repoWrapper.Facility.GetById(id);
-            return View(facility);
-        }
+        //            _context.Facilities.Update(model);
+        //            _context.SaveChanges();
+        //            return RedirectToAction("Facilities");
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine($"An error occurred while updating the facility: {ex.Message}");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("Model state is not valid.");
+        //    }
+        //    return View(model);
+        //}
 
-        [HttpPost]
-        public IActionResult DeleteFacilityConfirmed(int id)
-        {
-            Console.WriteLine($"Received ID: {id}");  // Debugging line
-            var facility = _context.Facilities.Find(id);
-            if (facility == null)
-            {
-                TempData["ErrorMessage"] = "Facility not found";
-                return RedirectToAction("Facilities");
-            }
-            _context.Facilities.Remove(facility);
-            _context.SaveChanges();
-            return RedirectToAction("Facilities");
-        }
+        //[HttpGet]
+        //public IActionResult DeleteFacility(int id)
+        //{
+        //    var facility = _repoWrapper.Facility.GetById(id);
+        //    return View(facility);
+        //}
+
+        //[HttpPost]
+        //public IActionResult DeleteFacilityConfirmed(int id)
+        //{
+        //    Console.WriteLine($"Received ID: {id}");  // Debugging line
+        //    var facility = _context.Facilities.Find(id);
+        //    if (facility == null)
+        //    {
+        //        TempData["ErrorMessage"] = "Facility not found";
+        //        return RedirectToAction("Facilities");
+        //    }
+        //    _context.Facilities.Remove(facility);
+        //    _context.SaveChanges();
+        //    return RedirectToAction("Facilities");
+        //}
 
 
 

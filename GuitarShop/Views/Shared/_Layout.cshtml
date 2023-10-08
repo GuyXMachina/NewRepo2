@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title - Facility Management</title>
-    <link rel="stylesheet" asp-href-include="/lib/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/all.min.css" />
-
+    <link rel="stylesheet" asp-href-include="lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" asp-href-include="lib/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" asp-href-include="lib/fullcalendar-scheduler/timeline/main.min.css" />
 </head>
 <body>
     <header>
@@ -40,6 +40,10 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Transactions" asp-action="Index">Manage Transactions</a> <!-- New button here -->
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="FacilityAdmin" asp-action="ListUsers">View Users</a> <!-- New button here -->
+                        </li>
+
                     }
 
                     @if (User.IsInRole("FacilityManager"))
@@ -97,6 +101,9 @@
         <hr />
         <p>&copy; @DateTime.Now.Year - Facility Management</p>
     </footer>
+    
+    <script asp-src-include="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script asp-src-include="lib/fullcalendar-scheduler/resource-common/main.min.js"></script>
     <script asp-src-include="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script asp-src-include="lib/jquery/jquery.min.js"></script>
     @RenderSection("Scripts", required: false)

@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Book a date";
+}
+
+<link rel="stylesheet" href="~/lib/fullcalendar-scheduler/resource-timeline/main.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/lib/fullcalendar/index.global.min.js"></script>
+
+<h2>Calendar</h2>
+<div id='calendar'></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            initialDate: '2023-10-10',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            editable: true,
+            selectable: true,
+            events: @Html.Raw(ViewData["Bookings"])
+        });
+        calendar.render();
+    });
+</script>

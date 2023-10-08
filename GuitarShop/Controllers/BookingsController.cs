@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GuitarShop.Data;
 using GuitarShop.Models;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace GuitarShop.Controllers
 {
@@ -25,6 +27,22 @@ namespace GuitarShop.Controllers
             var appDbContext = _context.Bookings.Include(b => b.Facility).Include(b => b.FacilityInCharge).Include(b => b.FacilityManager).Include(b => b.User);
             return View(await appDbContext.ToListAsync());
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CalendarBook()
+        {
+            var bookings = await _context.Bookings.Select(b => new 
+            {
+                id = b.BookingID,
+                title = b.Facility.Name,
+                start = b.StartTime,
+                end = b.EndTime,
+                url = Url.Action("CalendarBook", "Bookings")
+            }).ToListAsync();
+            ViewData["Bookings"] = JsonConvert.SerializeObject(bookings);
+            return View(bookings);
+        }
+
 
         // GET: Bookings/Details/5
         public async Task<IActionResult> Details(int? id)
