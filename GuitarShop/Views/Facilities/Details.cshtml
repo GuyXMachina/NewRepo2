@@ -73,6 +73,6 @@
     {
         <a asp-action="Edit" asp-route-id="@Model.FacilityID" class="btn btn-primary">Edit</a>
     }
-    <a asp-action="CheckOut" asp-controller="Facility" asp-route-id="@Model.FacilityID" class="btn btn-primary">Pay Now</a>
+    <a asp-action="CheckOut" asp-controller="Facility" asp-route-id="@Model.Bookings" class="btn btn-primary">Pay Now</a>
     <a asp-action="CalendarBook" asp-controller="Bookings" class="btn btn-primary">Back to Bookings</a>
 </div>

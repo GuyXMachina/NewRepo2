@@ -136,7 +136,8 @@ namespace GuitarShop.Controllers
             Session session = service.Create(options);
             Response.Headers.Add("Location", session.Url);
             TempData["BookingID"] = id;
-           
+            TempData["Price"] = facility.DiscountPrice.ToString("G");
+
             return new StatusCodeResult(303);
         }
 
@@ -146,9 +147,10 @@ namespace GuitarShop.Controllers
 
             try
             {
-                if (TempData["BookingID"] != null)
+                if (TempData["BookingID"] != null && TempData["Price"] != null)
                 {
-                    var bookingId = (int)TempData["BookingID"];
+                    int bookingId = Convert.ToInt32(TempData["BookingID"]);
+                    decimal price = Convert.ToDecimal(TempData["Price"]);
                     var booking = await _context.Bookings.FindAsync(bookingId);
 
                     if (booking != null)
@@ -156,7 +158,8 @@ namespace GuitarShop.Controllers
                         booking.Transaction = new Transaction
                         {
                             TransactionDate = DateTime.Now,
-                            PaymentMethod = "Credit Card"
+                            PaymentMethod = "Credit Card",
+                            Amount = price
                         };
 
                         booking.Status = "Paid";
