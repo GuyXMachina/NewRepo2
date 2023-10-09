@@ -21,9 +21,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.PaymentMethod)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Booking)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -38,9 +35,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PaymentMethod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Booking.Status)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.TransactionID">Edit</a> |

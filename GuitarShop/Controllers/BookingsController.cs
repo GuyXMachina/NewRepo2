@@ -9,6 +9,8 @@ using GuitarShop.Data;
 using GuitarShop.Models;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using Stripe.Checkout;
+using Stripe;
 
 namespace GuitarShop.Controllers
 {
@@ -41,7 +43,100 @@ namespace GuitarShop.Controllers
             ViewData["Bookings"] = JsonConvert.SerializeObject(bookings);
             return View(bookings);
         }
+        public IActionResult CheckOut(int id)
+        {
+            var facility = _context.Facilities.Find(id);
+            if (facility == null)
+            {
+                return NotFound();
+            }
+            var booking = _context.Bookings
+                          .Where(b => b.FacilityID == id)
+                          .OrderByDescending(b => b.BookingID)
+                          .FirstOrDefault();
 
+            if (booking == null)
+            {
+                return NotFound(); // or some other appropriate action
+            }
+
+            int bookingId = booking.BookingID;
+
+            string scheme = HttpContext.Request.Scheme;
+            string host = HttpContext.Request.Host.Value;
+            var domain = $"{scheme}://{host}";
+
+            var options = new SessionCreateOptions
+            {
+                SuccessUrl = domain + $"/Bookings/Success",
+                CancelUrl = domain + "/Bookings/Cancel",
+                LineItems = new List<SessionLineItemOptions>
+        {
+            new SessionLineItemOptions
+            {
+
+            PriceData = new SessionLineItemPriceDataOptions
+                {
+                    UnitAmount = Convert.ToInt64(facility.DiscountPrice * 100),
+                    Currency = "zar",
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = facility.Name,
+                    },
+                },
+                Quantity = 1,
+            }
+        },
+                Mode = "payment"
+            };
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+            Response.Headers.Add("Location", session.Url);
+            TempData["BookingID"] = bookingId;
+            TempData["Price"] = facility.DiscountPrice.ToString("G");
+
+            return new StatusCodeResult(303);
+        }
+
+
+        public async Task<IActionResult> Success()
+        {
+
+            try
+            {
+                if (TempData["BookingID"] != null && TempData["Price"] != null)
+                {
+                    int bookingId = Convert.ToInt32(TempData["BookingID"]);
+                    decimal price = Convert.ToDecimal(TempData["Price"]);
+                    var booking = await _context.Bookings.FindAsync(bookingId);
+
+                    if (booking != null)
+                    {
+                        booking.Transaction = new Transaction
+                        {
+                            TransactionDate = DateTime.Now,
+                            PaymentMethod = "Credit Card",
+                            Amount = price
+                        };
+
+                        booking.Status = "Paid";
+                        _context.Bookings.Update(booking);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                return View();
+            }
+            catch (StripeException)
+            {
+                // Invalid payload or signature. Return 400 Bad Request
+                return BadRequest();
+            }
+        }
+        public IActionResult Cancel()
+        {
+            return View();
+        }
 
         // GET: Bookings/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -82,22 +177,17 @@ namespace GuitarShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BookingID,FacilityID,UserID,StartTime,EndTime,Status,FacilityManagerId,FacilityInChargeId")] Booking booking)
         {
+            Console.WriteLine($"Debugging: FacilityID is {booking.FacilityID}, {booking.BookingID}");
             if (ModelState.IsValid)
             {
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
                 TempData["success"] = "Booking successfully created.";
-                //Transaction transaction = new Transaction
-                //{
-                //    BookingID = booking.BookingID,
-                //    Amount = booking.Facility.DiscountPrice, // Implement this function to calculate the amount
-                //    TransactionDate = DateTime.Now,
-                //    PaymentMethod = "Credit Card" // Set this based on your payment method
-                //};
+                
                 ViewData["FacilityID"] = new SelectList(_context.Facilities, "FacilityID", "Code", booking.FacilityID);
                 ViewData["FacilityInChargeId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityInChargeId);
                 ViewData["FacilityManagerId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityManagerId);
-                ViewData["UserID"] = new SelectList(_context.UserS, "Id", "Id", booking.UserID);
+                ViewData["UserID"] = new SelectList(_context.UserS, "Id", "UserName", booking.UserID);
 
                 return RedirectToAction(nameof(Index));
             }

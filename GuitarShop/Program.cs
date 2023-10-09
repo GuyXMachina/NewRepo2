@@ -9,6 +9,7 @@ var Configuration = builder.Configuration;
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+builder.Services.AddSession();
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
@@ -32,6 +33,7 @@ app.UseRouting();
 StripeConfiguration.ApiKey = Configuration.GetSection("Stripe:SecretKey").Get<string>();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession(); // Add this line, make sure it's before UseEndpoints()
 
 // route for sorting and paging category
 app.MapControllerRoute(
