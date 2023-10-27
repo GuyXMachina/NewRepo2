@@ -1,71 +1,48 @@
 ﻿@model IEnumerable<Booking>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Facility)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FacilityManager)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FacilityInCharge)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Facility.Code)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FacilityManager.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FacilityInCharge.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BookingID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookingID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookingID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container my-5">
+    <div class="row">
+        <div class="col text-center">
+            <h1 class="display-4">Bookings</h1>
+            <hr class="my-4">
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col text-right">
+            <a asp-action="Create" class="btn btn-primary">Create New Booking</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.StartTime)</th>
+                        <th>@Html.DisplayNameFor(model => model.EndTime)</th>
+                        <th>@Html.DisplayNameFor(model => model.Status)</th>
+                        <th>@Html.DisplayNameFor(model => model.Facility)</th>
+                        <th>@Html.DisplayNameFor(model => model.User)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.StartTime)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EndTime)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Facility.Code)</td>
+                            <td>@Html.DisplayFor(modelItem => item.User.Id)</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.BookingID" class="btn btn-warning btn-sm">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.BookingID" class="btn btn-info btn-sm">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.BookingID" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

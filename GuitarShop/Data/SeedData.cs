@@ -33,6 +33,7 @@ namespace GuitarShop.Data
                     new Facility
                     {
                         CategoryID = context.Categories.First(c => c.CategoryName == "Gym").CategoryID,
+                        Picture = "https://www.hussle.com/blog/wp-content/uploads/2020/12/Gym-structure-1080x675.png",
                         Code = "Gym_QQ",
                         Name = "Main Gym",
                         Price = (decimal)100.00,
@@ -41,6 +42,7 @@ namespace GuitarShop.Data
                     new Facility
                     {
                         CategoryID = context.Categories.First(c=> c.CategoryName == "Laundry Service").CategoryID,
+                        Picture = "https://speedqueencommercial.com/en-us/wp-content/uploads/2020/01/Modern-laundry-room-with-Speed-Queen-commercial-laundry-equipment.png",
                         Code = "laundry_QQ",
                         Name = "Laundry Room 1",
                         Price = (decimal)95.00,
@@ -49,6 +51,7 @@ namespace GuitarShop.Data
                     new Facility
                     {
                         CategoryID = context.Categories.First(c => c.CategoryName == "Parking Service").CategoryID,
+                        Picture = "https://concreteuprising.com/wp-content/uploads/2019/05/iStock-925615406_res.jpg",
                         Code = "Parking_QQ",
                         Name = "Parking Lot A",
                         Price = (decimal)30.00,
@@ -57,6 +60,7 @@ namespace GuitarShop.Data
                     new Facility
                     {
                         CategoryID = context.Categories.First(c => c.CategoryName == "Library Discussion Room").CategoryID,
+                        Picture = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Statsbiblioteket_l%C3%A6sesalen-2.jpg/1280px-Statsbiblioteket_l%C3%A6sesalen-2.jpg",
                         Code = "library_QQ",
                         Name = "Library Discussion Room 1",
                         Price = (decimal)0.00,

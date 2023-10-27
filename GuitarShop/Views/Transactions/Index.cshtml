@@ -1,47 +1,44 @@
 ﻿@model IEnumerable<GuitarShop.Models.Transaction>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TransactionDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentMethod)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TransactionDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentMethod)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TransactionID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TransactionID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TransactionID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container my-5">
+    <div class="row">
+        <div class="col text-center">
+            <h1 class="display-4">Transactions</h1>
+            <hr class="my-4">
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col text-right">
+            <a asp-action="Create" class="btn btn-success">Create New Transaction</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-hover table-responsive-lg">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Amount)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.TransactionDate)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.PaymentMethod)</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TransactionDate.ToString("yyyy-MM-dd HH:mm:ss"))</td>
+                            <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.TransactionID" class="btn btn-warning btn-sm">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.TransactionID" class="btn btn-info btn-sm">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.TransactionID" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

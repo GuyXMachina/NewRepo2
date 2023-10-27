@@ -2,4 +2,23 @@
     ViewData["Title"] = "Facility Manager Dashboard";
 }
 
-<h1>Welcome to the Facility Manager Dashboard</h1>
+<div class="container my-5">
+    <div class="row">
+        <div class="col text-center">
+            <h1 class="display-4">Welcome to the Facility Manager Dashboard</h1>
+            <hr class="my-4">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <p class="lead">Here you can manage all the facilities, bookings, and more.</p>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col text-center">
+            <a asp-controller="Facilities" asp-action="Index" class="btn btn-primary btn-lg">Manage Facilities</a>
+            <a asp-controller="Bookings" asp-action="Index" class="btn btn-secondary btn-lg">View Bookings</a>
+            <a asp-controller="Transactions" asp-action="Index" class="btn btn-success btn-lg">Reports</a>
+        </div>
+    </div>
+</div>
