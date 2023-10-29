@@ -11,6 +11,9 @@
     <div class="row mb-4">
         <div class="col text-right">
             <a asp-action="Create" class="btn btn-success">Create New Transaction</a>
+            <form asp-action="ProcessTransaction" method="post">
+                <button class="btn btn-info" type="submit">Generate Transaction Report</button>
+            </form>
         </div>
     </div>
     <div class="row">

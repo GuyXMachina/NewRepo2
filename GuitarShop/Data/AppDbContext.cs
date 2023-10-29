@@ -12,7 +12,7 @@ namespace GuitarShop.Data
         {
 
         }
-
+        public DbSet<Review> Reviews { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<FacilityManager> FacilityManagers { get; set; }
         public DbSet<Booking> Bookings { get; set; }
@@ -40,8 +40,9 @@ namespace GuitarShop.Data
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+            modelBuilder.Entity<Review>().ToTable("Review");
 
-         
+
         }
 
     }

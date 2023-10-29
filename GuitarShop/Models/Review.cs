@@ -10,8 +10,11 @@ namespace GuitarShop.Models
         public string UserID { get; set; }
         [ForeignKey("Facility")]
         public int FacilityID { get; set; }
-        public int RatingValue { get; set; } // 1 to 5
+        public int RatingValue { get; set; } // 1 to 6
         public string Comment { get; set; } // optional
         public DateTime Date { get; set; }
+        [ForeignKey("UserID")]
+        public User User {  get; set; }
+        public Facility Facility { get; set; }
     }
 }

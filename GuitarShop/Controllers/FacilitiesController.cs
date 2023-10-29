@@ -86,12 +86,9 @@ namespace GuitarShop.Controllers
             return View(facility);
         }
 
-        // POST: Facilities/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FacilityID,Code,Name,Price,PricingType,DiscountPercent,CategoryID,Location,Capacity,AvailabilityTimes")] Facility facility)
+        public async Task<IActionResult> Edit(int id, [Bind("FacilityID,Picture,Code,Name,Price,PricingType,DiscountPercent,CategoryID,Location,Capacity,AvailabilityTimes")] Facility facility)
         {
             if (id != facility.FacilityID)
             {

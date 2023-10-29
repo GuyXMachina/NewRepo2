@@ -109,6 +109,27 @@ namespace GuitarShop.Controllers
             else
                 return RedirectToAction("List");
         }
+        public IActionResult Reviews()
+        {
+            List<Models.Review> reviews = _context.Reviews
+                  .Include(r => r.User)
+                  .ToList();
+
+            return View(reviews);
+        }
+
+        [HttpPost]
+        public IActionResult AddReview(Models.Review newReview)
+        {
+            if (ModelState.IsValid)
+            {
+                // Add the review to the database
+                _context.Reviews.Add(newReview);
+                _context.SaveChanges();
+                return RedirectToAction("Reviews");
+            }
+            return View(newReview);
+        }
 
     }
 }

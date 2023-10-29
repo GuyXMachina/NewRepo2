@@ -169,6 +169,34 @@ namespace GuitarShop.Migrations
                     b.ToTable("Order", (string)null);
                 });
 
+            modelBuilder.Entity("GuitarShop.Models.Review", b =>
+                {
+                    b.Property<int>("RatingID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RatingID"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FacilityID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RatingValue")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RatingID");
+
+                    b.ToTable("Review", (string)null);
+                });
+
             modelBuilder.Entity("GuitarShop.Models.Transaction", b =>
                 {
                     b.Property<int>("TransactionID")

@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GuitarShop.Data;
 using GuitarShop.Models;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using System.Net;
+using System.Net.Mail;
 
 namespace GuitarShop.Controllers
 {
@@ -164,5 +168,55 @@ namespace GuitarShop.Controllers
         {
             return _context.Transactions.Any(e => e.TransactionID == id);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ProcessTransaction(Transaction transaction)
+        {
+            await Task.Run(() => GeneratePdf(transaction));
+            await SendEmailWithPdfAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        public void GeneratePdf(Transaction transaction)
+        {
+            Document doc = new Document();
+            PdfWriter.GetInstance(doc, new FileStream("TransactionReport.pdf", FileMode.Create));
+            doc.Open();
+
+            doc.Add(new Paragraph($"Transaction ID: {transaction.TransactionID}"));
+            doc.Add(new Paragraph($"Booking ID: {transaction.BookingID}"));
+            doc.Add(new Paragraph($"Amount: {transaction.Amount}"));
+            doc.Add(new Paragraph($"Transaction Date: {transaction.TransactionDate}"));
+            doc.Add(new Paragraph($"Payment Method: {transaction.PaymentMethod}"));
+
+            doc.Close();
+        }
+        public async Task SendEmailWithPdfAsync()
+        {
+            string fromMail = "thembi1018@gmail.com";
+            string password = "cyis kdhf pmpl ansl";
+
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(fromMail);
+            mail.To.Add(new MailAddress("2018477840@ufs4life.ac.za"));
+            mail.Subject = "Transaction Report";
+            mail.Body = "Attached is the transaction report.";
+
+            Attachment attachment;
+            attachment = new Attachment("TransactionReport.pdf");
+            mail.Attachments.Add(attachment);
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential(fromMail, password),
+                EnableSsl = true
+            };
+
+
+            await SmtpServer.SendMailAsync(mail);
+        }
+
+
     }
 }
