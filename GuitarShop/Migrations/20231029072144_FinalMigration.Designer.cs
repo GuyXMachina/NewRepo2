@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuitarShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
+<<<<<<<< HEAD:GuitarShop/Migrations/20231029072144_FinalMigration.Designer.cs
     [Migration("20231029072144_FinalMigration")]
     partial class FinalMigration
+========
+    [Migration("20231010123349_InitialMigration")]
+    partial class InitialMigration
+>>>>>>>> 58b526ef899d3274bac8e06e9bf6122911a8bba1:GuitarShop/Migrations/20231010123349_InitialMigration.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

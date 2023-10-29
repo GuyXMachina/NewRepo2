@@ -6,7 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GuitarShop.Migrations
 {
     /// <inheritdoc />
+<<<<<<<< HEAD:GuitarShop/Migrations/20231029072144_FinalMigration.cs
     public partial class FinalMigration : Migration
+========
+    public partial class InitialMigration : Migration
+>>>>>>>> 58b526ef899d3274bac8e06e9bf6122911a8bba1:GuitarShop/Migrations/20231010123349_InitialMigration.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
