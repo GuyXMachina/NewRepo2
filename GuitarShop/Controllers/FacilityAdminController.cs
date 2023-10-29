@@ -155,7 +155,7 @@ namespace GuitarShop.Controllers
                 {
                     Name = model.Name,
                     Surname = model.Surname,
-                    UserName = model.Name + model.Surname,
+                    UserName = model.Name + " "+ model.Surname,
                     Email = model.Email,
                     UserType = UserType.Staff
                 };

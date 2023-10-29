@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuitarShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231005204258_Las")]
-    partial class Las
+    [Migration("20231010123349_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,12 +52,10 @@ namespace GuitarShop.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("UserID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("BookingID");
@@ -124,6 +122,9 @@ namespace GuitarShop.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Picture")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
@@ -198,7 +199,8 @@ namespace GuitarShop.Migrations
 
                     b.HasKey("TransactionID");
 
-                    b.HasIndex("BookingID");
+                    b.HasIndex("BookingID")
+                        .IsUnique();
 
                     b.HasIndex("OrderID");
 
@@ -469,9 +471,7 @@ namespace GuitarShop.Migrations
 
                     b.HasOne("GuitarShop.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserID");
 
                     b.Navigation("Facility");
 
@@ -513,8 +513,8 @@ namespace GuitarShop.Migrations
             modelBuilder.Entity("GuitarShop.Models.Transaction", b =>
                 {
                     b.HasOne("GuitarShop.Models.Booking", "Booking")
-                        .WithMany()
-                        .HasForeignKey("BookingID")
+                        .WithOne("Transaction")
+                        .HasForeignKey("GuitarShop.Models.Transaction", "BookingID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -592,6 +592,11 @@ namespace GuitarShop.Migrations
                         .HasForeignKey("GuitarShop.Models.FacilityManager", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GuitarShop.Models.Booking", b =>
+                {
+                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("GuitarShop.Models.Category", b =>

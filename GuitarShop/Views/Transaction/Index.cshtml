@@ -1,27 +1,37 @@
 ﻿@model IEnumerable<Transaction>
 
-<h2>All Transactions</h2>
-
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Transaction ID</th>
-            <th>Booking ID</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Payment Method</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var transaction in Model)
-        {
-            <tr>
-                <td>@transaction.TransactionID</td>
-                <td>@transaction.BookingID</td>
-                <td>@transaction.Amount</td>
-                <td>@transaction.TransactionDate</td>
-                <td>@transaction.PaymentMethod</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="container my-5">
+    <div class="row">
+        <div class="col text-center">
+            <h1 class="display-4">All Transactions</h1>
+            <hr class="my-4">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-hover table-responsive-lg">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Transaction ID</th>
+                        <th scope="col">Booking ID</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Payment Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in Model)
+                    {
+                        <tr>
+                            <td>@transaction.TransactionID</td>
+                            <td>@transaction.BookingID</td>
+                            <td>@transaction.Amount</td>
+                            <td>@transaction.TransactionDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td>@transaction.PaymentMethod</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

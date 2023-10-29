@@ -25,6 +25,10 @@
     {
       "library": "toastr.js@2.1.4",
       "destination": "wwwroot/lib/toastr.js/"
+    },
+    {
+      "library": "material-components-web@14.0.0",
+      "destination": "wwwroot/lib/material-components-web/"
     }
   ]
 }

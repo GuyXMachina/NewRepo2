@@ -11,16 +11,19 @@ using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using Stripe.Checkout;
 using Stripe;
+using Microsoft.AspNetCore.Identity;
 
 namespace GuitarShop.Controllers
 {
     public class BookingsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public BookingsController(AppDbContext context)
+        public BookingsController(AppDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Bookings
@@ -57,7 +60,7 @@ namespace GuitarShop.Controllers
 
             if (booking == null)
             {
-                return NotFound(); // or some other appropriate action
+                return NotFound(); 
             }
 
             int bookingId = booking.BookingID;
@@ -164,11 +167,27 @@ namespace GuitarShop.Controllers
         public IActionResult Create()
         {
             ViewData["FacilityID"] = new SelectList(_context.Facilities, "FacilityID", "Code");
-            ViewData["FacilityInChargeId"] = new SelectList(_context.UserS, "Id", "Id");
-            ViewData["FacilityManagerId"] = new SelectList(_context.UserS, "Id", "Id");
-            ViewData["UserID"] = new SelectList(_context.UserS, "Id", "Id");
+
+            // Check if the current user is an admin
+            if (User.IsInRole("FacilityAdmin"))
+            {
+                // If admin, show all users
+                ViewData["FacilityInChargeId"] = new SelectList(_context.Users, "Id", "UserName");
+                ViewData["FacilityManagerId"] = new SelectList(_context.Users, "Id", "UserName");
+                ViewData["UserID"] = new SelectList(_context.Users, "Id", "UserName");
+            }
+            else
+            {
+                // If not admin, only show the current user
+                var currentUserId = _userManager.GetUserId(User);
+                ViewData["FacilityInChargeId"] = new SelectList(_context.Users.Where(u => u.Id == currentUserId), "Id", "UserName");
+                ViewData["FacilityManagerId"] = new SelectList(_context.Users.Where(u => u.Id == currentUserId), "Id", "UserName");
+                ViewData["UserID"] = new SelectList(_context.Users.Where(u => u.Id == currentUserId), "Id", "UserName");
+            }
+
             return View();
         }
+
 
         // POST: Bookings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -185,8 +204,8 @@ namespace GuitarShop.Controllers
                 TempData["success"] = "Booking successfully created.";
                 
                 ViewData["FacilityID"] = new SelectList(_context.Facilities, "FacilityID", "Code", booking.FacilityID);
-                ViewData["FacilityInChargeId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityInChargeId);
-                ViewData["FacilityManagerId"] = new SelectList(_context.UserS, "Id", "Id", booking.FacilityManagerId);
+                ViewData["FacilityInChargeId"] = new SelectList(_context.UserS, "Id", "UserName", booking.FacilityInChargeId);
+                ViewData["FacilityManagerId"] = new SelectList(_context.UserS, "Id", "UserName", booking.FacilityManagerId);
                 ViewData["UserID"] = new SelectList(_context.UserS, "Id", "UserName", booking.UserID);
 
                 return RedirectToAction(nameof(Index));

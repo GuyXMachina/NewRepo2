@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GuitarShop.Migrations
 {
     /// <inheritdoc />
-    public partial class Las : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -248,6 +248,7 @@ namespace GuitarShop.Migrations
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     AvailabilityTimes = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Picture = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FacilityManagerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -273,10 +274,10 @@ namespace GuitarShop.Migrations
                     BookingID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FacilityID = table.Column<int>(type: "int", nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     FacilityManagerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     FacilityInChargeId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     FacilityInChargeId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
@@ -309,8 +310,7 @@ namespace GuitarShop.Migrations
                         name: "FK_Booking_User_UserID",
                         column: x => x.UserID,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -411,7 +411,8 @@ namespace GuitarShop.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Transaction_BookingID",
                 table: "Transaction",
-                column: "BookingID");
+                column: "BookingID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transaction_OrderID",

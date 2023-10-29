@@ -16,31 +16,37 @@ namespace GuitarShop.Models.ViewModels
         public string ReturnUrl { get; set; } = "/";
     }
 
-    public class RegisterModel
+    public class RegisterModel : User
     {
-        [Required]
+        [Required(ErrorMessage = "User type is required.")]
         [Display(Name = "User Type")]
-        public string UserType { get; set; }
-        [Required]
-        [Display(Name = "Name and surname")]
+        public UserType UserType { get; set; }
+
+        [Required(ErrorMessage = "Name and surname are required.")]
+        [Display(Name = "Name and Surname")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email format.")]
         [Display(Name = "E-mail")]
-        [EmailAddress]
         public string Email { get; set; }
+
         [Display(Name = "Student Number")]
         public string StudentNumber { get; set; }
+
         [Display(Name = "Employee ID")]
-        public string EmployeeNumber { get; set; }
+        public string EmployeeID { get; set; }
+
         [Display(Name = "Passport Or ID Number")]
         public string PassportNumber { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is required.")]
         [DataType(DataType.Password)]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Compare("Password", ErrorMessage = "Passwords must match")]
+        [Required(ErrorMessage = "Confirm password is required.")]
+        [Compare("Password", ErrorMessage = "Passwords must match.")]
         [Display(Name = "Confirm Password")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }

@@ -30,14 +30,15 @@ namespace GuitarShop.Controllers
                 return RedirectToAction("Login");
             }
 
-            User model = new User
+            RegisterModel model = new RegisterModel
             {
                 UserName = user.UserName,
                 Email = user.Email,
                 UserType = user.UserType,
                 StudentNumber = user.StudentNumber,
                 EmployeeID = user.EmployeeID,
-                PassportNumber = user.PassportNumber
+                PassportNumber = user.PassportNumber,
+                ProfilePictureUrl = user.ProfilePictureUrl
             };
             TempData["success"] = "Logged In Successfully";
 

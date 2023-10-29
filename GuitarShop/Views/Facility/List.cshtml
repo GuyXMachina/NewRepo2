@@ -4,38 +4,37 @@
     var nameSortParam = ViewData["NameSortParam"];
     var priceSortParam = ViewData["PriceSortParam"];
 }
-
-<h1 class="text-center">Available Facilities</h1>
-
-<!-- Sorting UI -->
-<div class="container">
+<!-- Facility Listing -->
+<div class="container my-5">
     <div class="row">
-        <div class="col">
-            <h4>Sort By:</h4>
-            <a asp-action="List" asp-route-sortBy="@nameSortParam">Name</a> |
-            <a asp-action="List" asp-route-sortBy="@priceSortParam">Price</a>
+        <div class="col text-center">
+            <h1 class="display-4">Available Facilities</h1>
+            <hr class="my-4">
         </div>
     </div>
-</div>
-
-<!-- Facility Listing -->
-<div class="container">
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h4>Sort By:</h4>
+            <a asp-action="List" asp-route-sortBy="@nameSortParam" class="btn btn-outline-primary mx-2">Name</a>
+            <a asp-action="List" asp-route-sortBy="@priceSortParam" class="btn btn-outline-primary mx-2">Price</a>
+        </div>
+    </div>
     <div class="row">
         @if (Model?.Facilities != null)
         {
             foreach (var facility in Model.Facilities)
             {
-                <div class="col-md-3">
-                    <div class="card mb-4">
-                        <img src="@facility.Code" class="card-img-top" alt="@facility.Name">
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <img src="@Url.Content(facility.Picture)" class="card-img-top" alt="@facility.Name">
                         <div class="card-body">
                             <h5 class="card-title">@facility.Name</h5>
-                            <p class="card-text">Price: @facility.Price (@facility.PricingType)</p>
+                            <p class="card-text">Price: R @facility.Price (@facility.PricingType)</p>
                             <p class="card-text">Discount: @(facility.DiscountPercent ?? 0)%</p>
                             <p class="card-text">Capacity: @facility.Capacity</p>
                             <p class="card-text">Location: @facility.Location</p>
                             <a href="@Url.Action("Details", new { id = facility.FacilityID })" class="btn btn-primary">View Details</a>
-                            <a asp-action="CalendarBook" asp-controller="Bookings" asp-route-id="@facility.FacilityID" class="btn btn-primary">Book Facility</a>
+                            <a asp-action="CalendarBook" asp-controller="Bookings" asp-route-id="@facility.FacilityID" class="btn btn-secondary">Book Facility</a>
                         </div>
                     </div>
                 </div>
@@ -43,10 +42,12 @@
         }
         else
         {
-            <p>No facilities available.</p>
+            <div class="col text-center">
+                <p class="lead">No facilities available.</p>
+            </div>
         }
     </div>
-</div>
+    </div>
 
 
 <!-- Pagination UI -->

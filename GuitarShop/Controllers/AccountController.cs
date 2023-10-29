@@ -109,7 +109,12 @@ namespace GuitarShop.Controllers
                 var user = new User
                 {
                     UserName = registerModel.UserName,
-                    Email = registerModel.Email
+                    Email = registerModel.Email,
+                    UserType = registerModel.UserType,
+                    StudentNumber = registerModel.StudentNumber,
+                    PassportNumber = registerModel.PassportNumber,
+                    EmployeeID = registerModel.EmployeeID, 
+                    ProfilePictureUrl = registerModel.ProfilePictureUrl
                 };
 
                 var result = await _userManager.CreateAsync(user, registerModel.Password);
@@ -119,12 +124,14 @@ namespace GuitarShop.Controllers
                     Console.WriteLine("User creation succeeded.");
                     TempData["success"] = "You have successfully created an Account.";  // Added success TempData
                     await _userManager.AddToRoleAsync(user, "User");
-                    return RedirectToAction("Login", "Account");
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return RedirectToAction("Profile", "User");  // Redirect to Home/Index or any other page
                 }
                 else
                 {
                     Console.WriteLine("User creation failed.");
-                    ModelState.AddModelError("", "Unable to register new user");
+                    ModelState.AddModelError("", "User Already exists Try signing in");
                     TempData["warning"] = "Failed to create an Account.";  // Added warning TempData
                 }
             }
