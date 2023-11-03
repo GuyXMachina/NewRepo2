@@ -1,0 +1,64 @@
+﻿@model UFSFacilityManagement.Models.Transaction
+
+@{
+    ViewData["Title"] = "Details";
+}
+@section Styles{
+    <style>
+        .gradient-custom-2 {
+            /* fallback for old browsers */
+            background: #a1c4fd;
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: -webkit-linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1));
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1))
+        }
+
+        .card-stepper {
+            z-index: 0
+        }
+    </style>
+}
+
+<section class="gradient-custom-2">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-10 col-lg-8 col-xl-6">
+                <div class="card card-stepper" style="border-radius: 16px;">
+                    <div class="card-header p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="fw-bold">Transaction Details</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="d-flex flex-column mb-4 pb-2">
+                            <div class="flex-fill">
+                                <h5 class="bold">Amount</h5>
+                                <p class="text-muted">@Html.DisplayFor(model => model.Amount)</p>
+
+                                <h5 class="bold">Transaction Date</h5>
+                                <p class="text-muted">@Html.DisplayFor(model => model.TransactionDate)</p>
+
+                                <h5 class="bold">Payment Method</h5>
+                                <p class="text-muted">@Html.DisplayFor(model => model.PaymentMethod)</p>
+
+                                <h5 class="bold">Booking Status</h5>
+                                <p class="text-muted">@Html.DisplayFor(model => model.Booking.Status)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer p-4">
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Edit" asp-route-id="@Model?.TransactionID" class="fw-normal mb-0">Edit</a>
+                            <div class="border-start h-100"></div>
+                            <a asp-action="Index" class="fw-normal mb-0">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

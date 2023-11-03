@@ -1,0 +1,73 @@
+﻿@model UFSFacilityManagement.Models.Transaction
+
+@{
+    ViewData["Title"] = "Create";
+}
+@section Styles{
+    <style>
+        .gradient-custom-2 {
+            background: #a1c4fd;
+            background: -webkit-linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1));
+            background: linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1))
+        }
+
+        .card-stepper {
+            z-index: 0
+        }
+    </style>
+}
+
+<section class="gradient-custom-2">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-10 col-lg-8 col-xl-6">
+                <div class="card card-stepper" style="border-radius: 16px;">
+                    <div class="card-header p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="fw-bold">Create Transaction</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="BookingID" class="control-label">Status</label>
+                                <select asp-for="BookingID" class="form-control" asp-items="ViewBag.BookingID"></select>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Amount" class="control-label"></label>
+                                <input asp-for="Amount" class="form-control" />
+                                <span asp-validation-for="Amount" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="TransactionDate" class="control-label"></label>
+                                <input asp-for="TransactionDate" class="form-control" />
+                                <span asp-validation-for="TransactionDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PaymentMethod" class="control-label"></label>
+                                <input asp-for="PaymentMethod" class="form-control" />
+                                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer p-4">
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="fw-normal mb-0">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
