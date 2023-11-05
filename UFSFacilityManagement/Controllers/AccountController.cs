@@ -6,22 +6,27 @@ using UFSFacilityManagement.Models;
 using UFSFacilityManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
+using FireSharp;
+using FirebaseAdmin;
+using FirebaseAdmin.Auth;
 
 namespace UFSFacilityManagement.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly FirebaseClient _firebaseClient;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public AccountController(UserManager<User> userManager,
-        SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
+        SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, FirebaseClient firebaseClient)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _firebaseClient = firebaseClient;
         }
 
         [HttpGet]
@@ -43,7 +48,8 @@ namespace UFSFacilityManagement.Controllers
             {
                 User user =
                   await _userManager.FindByEmailAsync(loginModel.Email);
-                if (user != null)
+                var userFire = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(loginModel.Email);
+                if (user != null && userFire != null)
                 {
                     var result = await _signInManager.PasswordSignInAsync(user,
                       loginModel.Password, false, false);
@@ -51,6 +57,19 @@ namespace UFSFacilityManagement.Controllers
                     {
                         TempData["success"] = "You have successfully logged in.";
                         // Redirect based on role
+                        // Fetch user data from Firebase
+                        var firebaseResponse = await _firebaseClient.GetAsync($"Users/{user.UserName}");
+                        
+                        var firebaseUserData = firebaseResponse.ResultAs<User>();
+                        
+                        if (firebaseUserData != null)
+                        {
+                            Console.WriteLine("User data fetched from Firebase successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to fetch user data from Firebase.");
+                        }
                         var roles = await _userManager.GetRolesAsync(user);
                         if (roles.Contains("FacilityAdmin"))
                         {
@@ -116,6 +135,14 @@ namespace UFSFacilityManagement.Controllers
                     EmployeeID = registerModel.EmployeeID, 
                     ProfilePictureUrl = registerModel.ProfilePictureUrl
                 };
+                var userArgs = new UserRecordArgs()
+                {
+                    Uid = Guid.NewGuid().ToString(), // Generate a new unique user ID
+                    Email = registerModel.Email,
+                    DisplayName = registerModel.UserName,
+                    PhotoUrl = registerModel.ProfilePictureUrl,
+                    Password = registerModel.Password, // You'd need to include this if you're setting a password
+                };
 
                 var result = await _userManager.CreateAsync(user, registerModel.Password);
 
@@ -123,6 +150,17 @@ namespace UFSFacilityManagement.Controllers
                 {
                     Console.WriteLine("User creation succeeded.");
                     TempData["success"] = "You have successfully created an Account.";  // Added success TempData
+                    var firebaseResponse = await _firebaseClient.SetAsync($"Users/{userArgs.DisplayName}", userArgs);
+                    var fire = await FirebaseAuth.DefaultInstance.CreateUserAsync(userArgs);
+                    if (firebaseResponse.StatusCode == System.Net.HttpStatusCode.OK && fire != null)
+                    {
+                        Console.WriteLine("User data stored in Firebase successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to store user data in Firebase.");
+                    }
+
                     await _userManager.AddToRoleAsync(user, "User");
                     await _signInManager.SignInAsync(user, isPersistent: false);
 

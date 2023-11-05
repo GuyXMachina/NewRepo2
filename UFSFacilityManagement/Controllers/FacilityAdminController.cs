@@ -10,6 +10,9 @@ using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.Net.Mail;
 using System.Net;
+using FireSharp;
+using FireSharp.Interfaces;
+using Firebase;
 
 namespace UFSFacilityManagement.Controllers
 {
@@ -20,14 +23,15 @@ namespace UFSFacilityManagement.Controllers
         private readonly UserManager<User> _userManager;
         //private readonly SignInManager<User> _signInManager;
         private readonly AppDbContext _context;
+        private readonly FirebaseClient _firebaseClient;
 
-        public FacilityAdminController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, AppDbContext appDbContext)
+        public FacilityAdminController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, AppDbContext appDbContext, FirebaseClient firebaseClient)
         {
             _repoWrapper = repoWrapper;
             _userManager = userManager;
             _context = appDbContext;
+            _firebaseClient = firebaseClient;
         }
-
         public IActionResult Facilities()
         {
             var facilities = _repoWrapper.Facility.FindAll();
@@ -221,6 +225,8 @@ namespace UFSFacilityManagement.Controllers
                 };
                 // Create FacilityManager asynchronously
                 IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+                string email = user.Email;
+                string password = user.Password;
                 if (result.Succeeded)
                 {
                     Console.WriteLine("User created successfully");  // Debugging line
@@ -264,7 +270,31 @@ namespace UFSFacilityManagement.Controllers
             if (ModelState.IsValid)
             {
                 var existingUser = await _userManager.FindByIdAsync(model.Id);
-      
+                var firebaseResponse = await _firebaseClient.GetAsync($"Users/{model.Id}");
+                var firebaseUserData = firebaseResponse.ResultAs<User>();
+                if (firebaseUserData != null)
+                {
+                    Console.WriteLine("User data fetched from Firebase successfully.");
+                    // You can use firebaseUserData for any additional operations
+                    firebaseUserData.UserName = model.UserName;
+                    firebaseUserData.Surname = model.Surname;
+                    firebaseUserData.Password = model.Password;
+                    firebaseUserData.Email = model.Email;
+
+                    firebaseResponse = await _firebaseClient.UpdateAsync($"Users/{model.UserName}", firebaseUserData);
+                    if (firebaseResponse.StatusCode == HttpStatusCode.OK)
+                    {
+                        Console.WriteLine("User data stored in Firebase successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to store user data in Firebase.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Failed to fetch user data from Firebase.");
+                }
                 if (existingUser != null)
                 {
                     // Update only the fields you want to change
@@ -295,8 +325,9 @@ namespace UFSFacilityManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> DeleteFacilityManager(string id)
         {
+            var firebaseResponse = await _firebaseClient.GetAsync($"Users/{id}");
             var manager = await _userManager.FindByIdAsync(id);
-            if (manager == null)
+            if (manager == null && firebaseResponse == null)
             {
                 return NotFound("Facility Manager not found.");
             }
@@ -307,8 +338,9 @@ namespace UFSFacilityManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteFacilityManagerConfirmed(string id)
         {
+            var firebaseResponse = await _firebaseClient.GetAsync($"Users/{id}");
             var manager = await _userManager.FindByIdAsync(id);
-            if (manager == null)
+            if (manager == null && firebaseResponse == null)
             {
                 return NotFound("Facility Manager not found.");
             }
@@ -327,6 +359,7 @@ namespace UFSFacilityManagement.Controllers
             var result = await _userManager.DeleteAsync(manager);
             if (result.Succeeded)
             {
+                firebaseResponse = await _firebaseClient.DeleteAsync($"Users/{id}");
                 TempData["success"] = "Facility Manager has been deleted.";
                 return RedirectToAction("FacilityManagers");
             }
